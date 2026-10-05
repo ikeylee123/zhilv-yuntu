@@ -1,0 +1,4019 @@
+{
+  "name": "Phase 1 fixed synthetic planning evaluation",
+  "version": 1,
+  "synthetic": true,
+  "cases": [
+    {
+      "id": "valid-01",
+      "category": "valid",
+      "description": "basic two-day plan",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "valid",
+        "error_types": [],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "valid-02",
+      "category": "valid",
+      "description": "exact budget boundary",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "budget_limit": "100.00"
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "valid",
+        "error_types": [],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "valid-03",
+      "category": "valid",
+      "description": "zero estimated budget",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "budget_limit": "0"
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 0,
+          "budget_breakdown": {
+            "total": 0
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "valid",
+        "error_types": [],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "valid-04",
+      "category": "valid",
+      "description": "adjacent intervals",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                },
+                {
+                  "name": "Gallery C",
+                  "poi_id": "c",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "valid",
+        "error_types": [],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "valid-05",
+      "category": "valid",
+      "description": "same name but distinct stable IDs",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "valid",
+        "error_types": [],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "valid-06",
+      "category": "valid",
+      "description": "exact normalized must-visit name",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "must_visit": [
+            " gallery   a "
+          ]
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "valid",
+        "error_types": [],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "valid-07",
+      "category": "valid",
+      "description": "must-visit by ID",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "must_visit": [
+            {
+              "entity_id": "b",
+              "name": "unused display name"
+            }
+          ]
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "valid",
+        "error_types": [],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "valid-08",
+      "category": "valid",
+      "description": "avoid different exact name",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "avoid": [
+            "Gallery A Annex"
+          ]
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "valid",
+        "error_types": [],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "valid-09",
+      "category": "valid",
+      "description": "avoid different ID",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "avoid": [
+            {
+              "entity_id": "unknown"
+            }
+          ]
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "valid",
+        "error_types": [],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "valid-10",
+      "category": "valid",
+      "description": "inclusive daily bounds",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "daily_start_time": "09:00",
+          "daily_end_time": "11:00"
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "valid",
+        "error_types": [],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "valid-11",
+      "category": "valid",
+      "description": "start-only window",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "daily_start_time": "08:00"
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "valid",
+        "error_types": [],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "valid-12",
+      "category": "valid",
+      "description": "end-only window",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "daily_end_time": "12:00"
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "valid",
+        "error_types": [],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "valid-13",
+      "category": "valid",
+      "description": "soft preferences do not determine validity",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "soft_preferences": [
+            "luxury",
+            "outdoors"
+          ]
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "valid",
+        "error_types": [],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "valid-14",
+      "category": "valid",
+      "description": "repeat restaurant is allowed",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ],
+              "meals": [
+                {
+                  "name": "Same Lunch",
+                  "poi_id": "meal",
+                  "meal_type": "lunch"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ],
+              "meals": [
+                {
+                  "name": "Same Lunch",
+                  "poi_id": "meal",
+                  "meal_type": "lunch"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "valid",
+        "error_types": [],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "valid-15",
+      "category": "valid",
+      "description": "same-day repeated name is outside cross-day duplicate rule",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                },
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "11:00",
+                  "end_time": "12:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "valid",
+        "error_types": [],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "date-01",
+      "category": "date",
+      "description": "reversed request range",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-07-31",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "date_range"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "date-02",
+      "category": "date",
+      "description": "missing day",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "day_count"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "date-03",
+      "category": "date",
+      "description": "day before requested range",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-07-31",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "day_date"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "date-04",
+      "category": "date",
+      "description": "day after requested range",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-03",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "day_date"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "date-05",
+      "category": "date",
+      "description": "duplicate date with different index",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "day_date"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "time-01",
+      "category": "time",
+      "description": "24:00 to 25:00",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "24:00",
+                  "end_time": "25:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "time_format"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "time-02",
+      "category": "time",
+      "description": "09:60 to 10:00",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:60",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "time_format"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "time-03",
+      "category": "time",
+      "description": "9:00 to 10:00",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "9:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "time_format"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "time-04",
+      "category": "time",
+      "description": "10:00 to 10:00",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "10:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "time_order"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "time-05",
+      "category": "time",
+      "description": "12:00 to 11:00",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "12:00",
+                  "end_time": "11:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "time_order"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "overlap-01",
+      "category": "overlap",
+      "description": "Overlapping interval 09:30-10:30; input order may be reversed",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                },
+                {
+                  "name": "Overlap 0",
+                  "poi_id": "c",
+                  "start_time": "09:30",
+                  "end_time": "10:30"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "activity_overlap"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "overlap-02",
+      "category": "overlap",
+      "description": "Overlapping interval 09:00-10:00; input order may be reversed",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Overlap 1",
+                  "poi_id": "c",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                },
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "activity_overlap"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "overlap-03",
+      "category": "overlap",
+      "description": "Overlapping interval 09:10-09:50; input order may be reversed",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                },
+                {
+                  "name": "Overlap 2",
+                  "poi_id": "c",
+                  "start_time": "09:10",
+                  "end_time": "09:50"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "activity_overlap"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "overlap-04",
+      "category": "overlap",
+      "description": "Overlapping interval 08:00-11:00; input order may be reversed",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Overlap 3",
+                  "poi_id": "c",
+                  "start_time": "08:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "activity_overlap"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "overlap-05",
+      "category": "overlap",
+      "description": "Overlapping interval 08:30-09:01; input order may be reversed",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                },
+                {
+                  "name": "Overlap 4",
+                  "poi_id": "c",
+                  "start_time": "08:30",
+                  "end_time": "09:01"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "activity_overlap"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "overlap-06",
+      "category": "overlap",
+      "description": "Overlapping interval 09:59-11:00; input order may be reversed",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Overlap 5",
+                  "poi_id": "c",
+                  "start_time": "09:59",
+                  "end_time": "11:00"
+                },
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "activity_overlap"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "overlap-07",
+      "category": "overlap",
+      "description": "Overlapping interval 09:00-09:01; input order may be reversed",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                },
+                {
+                  "name": "Overlap 6",
+                  "poi_id": "c",
+                  "start_time": "09:00",
+                  "end_time": "09:01"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "activity_overlap"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "overlap-08",
+      "category": "overlap",
+      "description": "Overlapping interval 09:59-10:00; input order may be reversed",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Overlap 7",
+                  "poi_id": "c",
+                  "start_time": "09:59",
+                  "end_time": "10:00"
+                },
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "activity_overlap"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "overlap-09",
+      "category": "overlap",
+      "description": "Overlapping interval 08:00-09:30; input order may be reversed",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                },
+                {
+                  "name": "Overlap 8",
+                  "poi_id": "c",
+                  "start_time": "08:00",
+                  "end_time": "09:30"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "activity_overlap"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "overlap-10",
+      "category": "overlap",
+      "description": "Overlapping interval 09:30-10:00; input order may be reversed",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Overlap 9",
+                  "poi_id": "c",
+                  "start_time": "09:30",
+                  "end_time": "10:00"
+                },
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "activity_overlap"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "duplicate-01",
+      "category": "duplicate",
+      "description": "Cross-day same entity by ID or exact normalized name",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "a",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "duplicate_attraction"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "duplicate-02",
+      "category": "duplicate",
+      "description": "Cross-day same entity by ID or exact normalized name",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": null,
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": null,
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "duplicate_attraction"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "duplicate-03",
+      "category": "duplicate",
+      "description": "Cross-day same entity by ID or exact normalized name",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": " gallery   a ",
+                  "poi_id": null,
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "duplicate_attraction"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "duplicate-04",
+      "category": "duplicate",
+      "description": "Cross-day same entity by ID or exact normalized name",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": null,
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "duplicate_attraction"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "duplicate-05",
+      "category": "duplicate",
+      "description": "Cross-day same entity by ID or exact normalized name",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {},
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Renamed Gallery",
+                  "poi_id": "a",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "duplicate_attraction"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "must_visit-01",
+      "category": "must_visit",
+      "description": "Required exact entity is absent; no fuzzy fallback",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "must_visit": [
+            "Missing Museum"
+          ]
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "must_visit_missing"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "must_visit-02",
+      "category": "must_visit",
+      "description": "Required exact entity is absent; no fuzzy fallback",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "must_visit": [
+            "Gallery"
+          ]
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "must_visit_missing"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "must_visit-03",
+      "category": "must_visit",
+      "description": "Required exact entity is absent; no fuzzy fallback",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "must_visit": [
+            {
+              "entity_id": "missing"
+            }
+          ]
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "must_visit_missing"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "must_visit-04",
+      "category": "must_visit",
+      "description": "Required exact entity is absent; no fuzzy fallback",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "must_visit": [
+            {
+              "entity_id": "missing",
+              "name": "Gallery A"
+            }
+          ]
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "must_visit_missing"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "must_visit-05",
+      "category": "must_visit",
+      "description": "Required exact entity is absent; no fuzzy fallback",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "must_visit": [
+            "Gallery A Annex"
+          ]
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "must_visit_missing"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "avoid-01",
+      "category": "avoid",
+      "description": "Prohibited exact entity is present",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "avoid": [
+            "Gallery A"
+          ]
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "avoided_attraction"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "avoid-02",
+      "category": "avoid",
+      "description": "Prohibited exact entity is present",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "avoid": [
+            " garden  b "
+          ]
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "avoided_attraction"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "avoid-03",
+      "category": "avoid",
+      "description": "Prohibited exact entity is present",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "avoid": [
+            {
+              "entity_id": "a"
+            }
+          ]
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "avoided_attraction"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "avoid-04",
+      "category": "avoid",
+      "description": "Prohibited exact entity is present",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "avoid": [
+            {
+              "entity_id": "b",
+              "name": "ignored"
+            }
+          ]
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "avoided_attraction"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "avoid-05",
+      "category": "avoid",
+      "description": "Prohibited exact entity is present",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "avoid": [
+            "GALLERY A"
+          ]
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "avoided_attraction"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "budget-01",
+      "category": "budget",
+      "description": "Estimated total exceeds declared upper bound",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "budget_limit": "100"
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100.01,
+          "budget_breakdown": {
+            "total": 100.01
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "budget_exceeded"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "budget-02",
+      "category": "budget",
+      "description": "Estimated total exceeds declared upper bound",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "budget_limit": "0"
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "budget_exceeded"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "budget-03",
+      "category": "budget",
+      "description": "Estimated total exceeds declared upper bound",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "budget_limit": "100"
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 120,
+          "budget_breakdown": {
+            "total": 120
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "budget_exceeded"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "budget-04",
+      "category": "budget",
+      "description": "Estimated total exceeds declared upper bound",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "budget_limit": "998.99"
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 999,
+          "budget_breakdown": {
+            "total": 999
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "budget_exceeded"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "budget-05",
+      "category": "budget",
+      "description": "Estimated total exceeds declared upper bound",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "budget_limit": "0"
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 0.01,
+          "budget_breakdown": {
+            "total": 0.01
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "budget_exceeded"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "window-01",
+      "category": "window",
+      "description": "Timed activity lies outside hard daily window",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "daily_start_time": "09:30",
+          "daily_end_time": "18:00"
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "daily_time_window"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "window-02",
+      "category": "window",
+      "description": "Timed activity lies outside hard daily window",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "daily_start_time": "08:00",
+          "daily_end_time": "10:30"
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "daily_time_window"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "window-03",
+      "category": "window",
+      "description": "Timed activity lies outside hard daily window",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "daily_start_time": "10:01",
+          "daily_end_time": null
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "daily_time_window"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "window-04",
+      "category": "window",
+      "description": "Timed activity lies outside hard daily window",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "daily_start_time": null,
+          "daily_end_time": "09:59"
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "daily_time_window"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "window-05",
+      "category": "window",
+      "description": "Timed activity lies outside hard daily window",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "daily_start_time": "12:00",
+          "daily_end_time": "18:00"
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "daily_time_window"
+        ],
+        "unknown_types": []
+      }
+    },
+    {
+      "id": "unknown-01",
+      "category": "unknown",
+      "description": "opening_hours requires facts outside Phase 1",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "hard_constraints": [
+            "opening_hours"
+          ]
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "opening_hours"
+        ]
+      }
+    },
+    {
+      "id": "unknown-02",
+      "category": "unknown",
+      "description": "route_feasibility requires facts outside Phase 1",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "hard_constraints": [
+            "route_feasibility"
+          ]
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility"
+        ]
+      }
+    },
+    {
+      "id": "unknown-03",
+      "category": "unknown",
+      "description": "real_travel_time requires facts outside Phase 1",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "hard_constraints": [
+            "real_travel_time"
+          ]
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "real_travel_time"
+        ]
+      }
+    },
+    {
+      "id": "unknown-04",
+      "category": "unknown",
+      "description": "real_ticket_price requires facts outside Phase 1",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "hard_constraints": [
+            "real_ticket_price"
+          ]
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "real_ticket_price"
+        ]
+      }
+    },
+    {
+      "id": "unknown-05",
+      "category": "unknown",
+      "description": "mobility_suitability requires facts outside Phase 1",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "hard_constraints": [
+            "mobility_suitability"
+          ]
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "mobility_suitability"
+        ]
+      }
+    },
+    {
+      "id": "unknown-06",
+      "category": "unknown",
+      "description": "Incomplete interval must not be treated as verified",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "daily_start_time": "08:00"
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": null
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "activity_time_missing"
+        ]
+      }
+    },
+    {
+      "id": "mixed-01",
+      "category": "mixed",
+      "description": "Multiple violations plus an unknown; hard errors take status precedence",
+      "input": {
+        "trip_request": {
+          "destination": "Synthetic City",
+          "start_date": "2026-08-01",
+          "end_date": "2026-08-02",
+          "travelers": 2,
+          "budget": 100
+        },
+        "constraints": {
+          "must_visit": [
+            "Missing"
+          ],
+          "avoid": [
+            "Gallery A"
+          ],
+          "budget_limit": "99",
+          "hard_constraints": [
+            "opening_hours"
+          ]
+        },
+        "current_itinerary": {
+          "trip_id": "synthetic",
+          "destination": "Synthetic City",
+          "summary": "Fixed synthetic plan; not real travel advice",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-08-01",
+              "spots": [
+                {
+                  "name": "Gallery A",
+                  "poi_id": "a",
+                  "start_time": "09:00",
+                  "end_time": "10:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-08-02",
+              "spots": [
+                {
+                  "name": "Garden B",
+                  "poi_id": "b",
+                  "start_time": "10:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "must_visit_missing",
+          "avoided_attraction",
+          "budget_exceeded"
+        ],
+        "unknown_types": [
+          "opening_hours"
+        ]
+      }
+    }
+  ]
+}

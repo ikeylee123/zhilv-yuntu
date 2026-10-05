@@ -9,6 +9,7 @@ from app.models.schemas import (
     TripRequest,
     TripSaveRequest,
 )
+from app.services.plan_validator import ensure_date_range
 from app.services.city_registry_service import CityCoverageTier
 from app.services.city_resolver_service import (
     CityResolutionUnavailableError,
@@ -45,6 +46,13 @@ def list_trips() -> TripListResponse:
 @router.post("/generate", response_model=Itinerary)
 def generate_trip(request: TripRequest) -> Itinerary:
     """生成结构化 itinerary。"""
+    try:
+        ensure_date_range(request)
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=422,
+            detail={"code": "invalid_date_range", "message": str(exc)},
+        ) from exc
     try:
         city_resolution = resolve_city(request.destination)
     except ValueError as exc:
@@ -149,15 +157,20 @@ def generate_trip(request: TripRequest) -> Itinerary:
         normalized_request = request.model_copy(
             update={"destination": city_resolution.city},
         )
-        return generate_dynamic_trip_itinerary(
+        itinerary = generate_dynamic_trip_itinerary(
             normalized_request,
             candidate_pool,
         )
+        itinerary = Itinerary.model_validate(itinerary)
+        itinerary.original_request = request.model_copy(deep=True)
+        return itinerary
 
     normalized_request = request.model_copy(
         update={"destination": city_resolution.city},
     )
-    return generate_trip_itinerary(normalized_request)
+    itinerary = Itinerary.model_validate(generate_trip_itinerary(normalized_request))
+    itinerary.original_request = request.model_copy(deep=True)
+    return itinerary
 
 
 @router.get("/stats", response_model=TokenStatsResponse)

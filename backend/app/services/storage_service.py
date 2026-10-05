@@ -1,5 +1,6 @@
 import json
 
+from app.services.plan_validator import attach_validation
 from app.config import SessionLocal, engine
 from app.models.db_models import TripRecord
 from app.models.schemas import (
@@ -22,6 +23,7 @@ def init_db() -> None:
 
 def save_itinerary(itinerary: Itinerary) -> str:
     """保存或更新完整 itinerary，并返回 trip_id。"""
+    itinerary = attach_validation(itinerary.model_copy(deep=True))
     init_db()
 
     session = SessionLocal()

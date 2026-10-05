@@ -10,6 +10,7 @@ from app.agents.trip_planner_agent import (
     generate_dynamic_planner_draft,
     generate_planner_draft,
 )
+from app.services.plan_validator import attach_validation, ensure_date_range
 from app.config import ENABLE_AMAP_ENRICHMENT
 from app.models.schemas import (
     BudgetBreakdown,
@@ -283,7 +284,7 @@ def generate_dynamic_trip_itinerary(
     candidate_pool: CityCandidatePool,
 ) -> Itinerary:
     """使用地图候选生成动态城市行程，所有展示实体都由 POI ID 回填。"""
-    day_count = max((request.end_date - request.start_date).days + 1, 1)
+    day_count = ensure_date_range(request)
     raw_draft, planner_usage = generate_dynamic_planner_draft(
         request=request,
         candidate_pool=candidate_pool,
@@ -497,13 +498,14 @@ def generate_dynamic_trip_itinerary(
             planner_completion_tokens=planner_usage.get("completion_tokens", 0),
         ),
     )
-    return _refresh_budget_breakdown(itinerary, request_budget=request.budget)
+    return attach_validation(
+        _refresh_budget_breakdown(itinerary, request_budget=request.budget), request
+    )
 
 
 def generate_trip_itinerary(request: TripRequest) -> Itinerary:
     """生成完整 itinerary，并使用更真实的预算估算方式。"""
-    day_count = (request.end_date - request.start_date).days + 1
-    day_count = max(day_count, 1)
+    day_count = ensure_date_range(request)
 
     rag_contexts, rewrite_usage, rerank_usage, embedding_usage = collect_trip_context(
         destination=request.destination,
@@ -758,11 +760,12 @@ def generate_trip_itinerary(request: TripRequest) -> Itinerary:
         source_notes=source_notes,
         token_usage=token_usage,
     )
-    return _maybe_enrich_itinerary_with_map_data(
+    itinerary = _maybe_enrich_itinerary_with_map_data(
         itinerary,
         city=request.destination,
         request_budget=request.budget,
     )
+    return attach_validation(itinerary, request)
 
 
 def edit_trip_itinerary(request: TripEditRequest) -> Itinerary:
@@ -863,8 +866,9 @@ def edit_trip_itinerary(request: TripEditRequest) -> Itinerary:
         or updated_itinerary.budget_breakdown.total
         or None
     )
-    return _maybe_enrich_itinerary_with_map_data(
+    updated_itinerary = _maybe_enrich_itinerary_with_map_data(
         updated_itinerary,
         city=updated_itinerary.destination,
         request_budget=reference_budget,
     )
+    return attach_validation(updated_itinerary, increment_version=True)

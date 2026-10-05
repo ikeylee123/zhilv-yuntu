@@ -1,11 +1,117 @@
 from __future__ import annotations
 
 from datetime import date as DateType, datetime
-from pydantic import BaseModel, Field
+from decimal import Decimal
+from typing import Any, Literal
+
+from pydantic import BaseModel, ConfigDict, Field, computed_field, model_serializer, model_validator
+
+
+class PlaceReference(BaseModel):
+    """An explicit ID takes precedence over a name; strings mean exact names."""
+
+    model_config = ConfigDict(extra="forbid")
+    entity_id: str | None = None
+    name: str | None = None
+
+    @model_validator(mode="after")
+    def require_identity(self) -> "PlaceReference":
+        if not (self.entity_id and self.entity_id.strip()) and not (self.name and self.name.strip()):
+            raise ValueError("A place reference needs a nonempty entity_id or name")
+        if self.entity_id is not None and not self.entity_id.strip():
+            raise ValueError("entity_id cannot be blank")
+        return self
+
+
+class TripConstraints(BaseModel):
+    """Typed fields are hard requirements; soft_preferences are not scored.
+
+    Omitted budget/preferences inherit the original request. Explicit null opts out.
+    Unimplemented hard_constraints are reported as unknown, never assumed satisfied.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+    budget_limit: Decimal | None = Field(default=None, ge=0, allow_inf_nan=False)
+    must_visit: list[PlaceReference | str] | None = None
+    avoid: list[PlaceReference | str] | None = None
+    daily_start_time: str | None = None
+    daily_end_time: str | None = None
+    transport_preference: str | None = None
+    mobility_constraints: list[str] | None = None
+    hard_constraints: list[str] | None = None
+    soft_preferences: list[str] | None = None
+
+    @model_serializer(mode="wrap")
+    def serialize_overrides(self, handler):
+        # Missing keys stay absent on the wire; explicit null keys stay present.
+        # This persists override presence, including when nested in a request/plan.
+        values = handler(self)
+        return {key: value for key, value in values.items() if key in self.model_fields_set}
+
+
+
+class ConstraintViolation(BaseModel):
+    type: str
+    severity: Literal["error", "warning", "unknown"]
+    message: str
+    day_index: int | None = None
+    activity_ref: str | None = None
+    expected: Any = None
+    actual: Any = None
+
+
+class ValidationReport(BaseModel):
+    """valid means no hard errors AND no unverifiable hard checks in this scope."""
+
+    violations: list[ConstraintViolation] = Field(default_factory=list)
+    unknowns: list[ConstraintViolation] = Field(default_factory=list)
+    checked_constraints: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def check_buckets(self) -> "ValidationReport":
+        if any(item.severity == "unknown" for item in self.violations):
+            raise ValueError("Unknown findings belong in unknowns")
+        if any(item.severity != "unknown" for item in self.unknowns):
+            raise ValueError("unknowns can only contain unknown findings")
+        return self
+
+    @computed_field
+    @property
+    def status(self) -> Literal["valid", "invalid", "unverifiable"]:
+        if any(item.severity == "error" for item in self.violations):
+            return "invalid"
+        return "unverifiable" if self.unknowns else "valid"
+
+    @computed_field
+    @property
+    def valid(self) -> bool:
+        return self.status == "valid"
+
+    @computed_field
+    @property
+    def summary(self) -> str:
+        errors = sum(item.severity == "error" for item in self.violations)
+        warnings = sum(item.severity == "warning" for item in self.violations)
+        return f"{self.status}: {errors} errors, {warnings} warnings, {len(self.unknowns)} unknowns"
+
+
+class ScheduledActivity(BaseModel):
+    """Validator adapter model; raw time strings remain available for error reporting."""
+
+    day_index: int
+    activity_ref: str
+    activity_type: Literal["attraction", "meal", "hotel", "transport"]
+    entity_id: str | None = None
+    name: str
+    start_time: str | None = None
+    end_time: str | None = None
+    estimated_cost: Decimal = Field(default=Decimal("0"), ge=0, allow_inf_nan=False)
 
 
 class TripRequest(BaseModel):
     """用于生成新行程的请求体。"""
+
+    constraints: TripConstraints | None = None
 
     destination: str = Field(..., description="目的地，例如大理")
     start_date: DateType = Field(..., description="出行开始日期")
@@ -109,6 +215,13 @@ class BudgetBreakdown(BaseModel):
     other: float = Field(default=0.0, ge=0, description="其他预算")
     total: float = Field(default=0.0, ge=0, description="预算总计")
 
+    @model_serializer(mode="wrap")
+    def serialize_budget_evidence(self, handler):
+        values = handler(self)
+        if "total" not in self.model_fields_set:
+            values.pop("total", None)
+        return values
+
 
 class DayPlan(BaseModel):
     """单日行程安排。"""
@@ -161,6 +274,11 @@ class TokenUsage(BaseModel):
 class Itinerary(BaseModel):
     """完整行程。"""
 
+    original_request: TripRequest | None = None
+    constraints: TripConstraints | None = None
+    validation_report: ValidationReport | None = None
+    planning_version: int | None = Field(default=None, ge=1)
+
     trip_id: str = Field(..., description="行程唯一标识")
     destination: str = Field(..., description="目的地")
     summary: str = Field(..., description="整趟行程的概述")
@@ -173,6 +291,13 @@ class Itinerary(BaseModel):
         description="RAG 或规则生成产生的补充说明",
     )
     token_usage: TokenUsage | None = Field(default=None, description="LLM token 消耗统计")
+
+    @model_serializer(mode="wrap")
+    def serialize_budget_evidence(self, handler):
+        values = handler(self)
+        if "estimated_budget" not in self.model_fields_set:
+            values.pop("estimated_budget", None)
+        return values
 
 
 class TripDetailResponse(BaseModel):
@@ -217,3 +342,13 @@ class TokenStatsResponse(BaseModel):
     total_completion_tokens: int = Field(default=0, ge=0, description="总输出 token")
     total_tokens: int = Field(default=0, ge=0, description="总 token")
     items: list[TripTokenStatsItem] = Field(default_factory=list, description="各行程 token 明细")
+
+
+class PlanningState(BaseModel):
+    """Ephemeral orchestration value; persisted metadata lives on Itinerary JSON."""
+
+    trip_request: TripRequest | None = None
+    constraints: TripConstraints = Field(default_factory=TripConstraints)
+    current_itinerary: Itinerary
+    validation_report: ValidationReport | None = None
+    version: int = Field(default=1, ge=1)
