@@ -1,0 +1,1507 @@
+{
+  "metadata": {
+    "git_commit": "dcee713c065bd75251f81fbb1784e6d5b4d1f5f8",
+    "date": "2026-10-06",
+    "python": "3.13.5",
+    "mode": "offline",
+    "providers": "mock/replay",
+    "evaluation_time": "2026-10-06T00:00:00+00:00",
+    "dataset_sha256": "1084dd46de24d7cebe46cf7ec1ca8d205341e7a257d63ab89bc2c124a37f5009",
+    "harness_sha256": "79d33a8aceb745e451ccf3c834baf308eba982ac26a78e1ac18231f8602e78e4",
+    "runtime_sha256": "3234d6172b4cf09d76b453124fb131f18a1517ddc15080c9fa2b1d77413a2df2",
+    "working_tree_dirty": true,
+    "fixture_sha256": "b3053d2027747207cb28e7fca7885d0a90d56d643b6b94da3c48801bc4abd6c4",
+    "rag_labels_sha256": "22fc0f90a525edb909cab190ae060d950fedda6d549e830d64deaec6e6edd58a"
+  },
+  "scope": "Offline cross-layer integration, not live itinerary quality. Initial cases use HTTP generation and a replay LLM; replans use HTTP and temporary authoritative SQLite; route and RAG cases use service boundaries.",
+  "metrics": {
+    "scenario_count": 24,
+    "passed": 24,
+    "failed": 0,
+    "decision_accuracy": {
+      "numerator": 24,
+      "denominator": 24,
+      "rate": 1.0
+    },
+    "constraint_outcome_accuracy": {
+      "numerator": 16,
+      "denominator": 16,
+      "rate": 1.0
+    },
+    "failure_state_preservation": {
+      "numerator": 11,
+      "denominator": 11,
+      "rate": 1.0
+    },
+    "state_preservation_accuracy": {
+      "numerator": 24,
+      "denominator": 24,
+      "rate": 1.0
+    },
+    "fact_grounding_correctness": {
+      "numerator": 11,
+      "denominator": 11,
+      "rate": 1.0
+    },
+    "version_conflict_correctness": {
+      "numerator": 1,
+      "denominator": 1,
+      "rate": 1.0
+    },
+    "unauthorized_mutation_count": 0,
+    "tool_calls": {
+      "search_poi": 8,
+      "get_poi": 12,
+      "get_driving_route": 14
+    },
+    "llm_calls": 9,
+    "fact_reuse_count": 17,
+    "fact_recollection_count": 14,
+    "network_attempts": 0
+  },
+  "scenarios": [
+    {
+      "scenario_id": "initial_basic",
+      "category": "initial",
+      "decision": "draft_created",
+      "validation_status": "valid",
+      "expected_decision": "draft_created",
+      "expected_status": "valid",
+      "reason": null,
+      "changed_activity_ids": [
+        "activity-initial-1"
+      ],
+      "preserved_activity_ids": [],
+      "tool_calls": {
+        "search_poi": 0,
+        "get_poi": 0,
+        "get_driving_route": 0
+      },
+      "llm_calls": 1,
+      "reused_facts": 0,
+      "recollected_facts": 0,
+      "validation_findings": [],
+      "version_before": null,
+      "version_after": 1,
+      "failure_state_preserved": null,
+      "unauthorized_mutations": [],
+      "concurrent_writer": false,
+      "fact_grounding_correct": null,
+      "version_conflict_correct": null,
+      "retrieval": null,
+      "checks": {
+        "persisted_draft": true,
+        "constraint_retention": true,
+        "context_provenance": true,
+        "decision": true,
+        "validation": true,
+        "no_unauthorized_mutation": true,
+        "expected_findings": true
+      },
+      "passed": true
+    },
+    {
+      "scenario_id": "initial_budget",
+      "category": "initial",
+      "decision": "draft_created",
+      "validation_status": "invalid",
+      "expected_decision": "draft_created",
+      "expected_status": "invalid",
+      "reason": null,
+      "changed_activity_ids": [
+        "activity-initial-1"
+      ],
+      "preserved_activity_ids": [],
+      "tool_calls": {
+        "search_poi": 0,
+        "get_poi": 0,
+        "get_driving_route": 0
+      },
+      "llm_calls": 1,
+      "reused_facts": 0,
+      "recollected_facts": 0,
+      "validation_findings": [
+        {
+          "type": "budget_exceeded",
+          "severity": "error",
+          "message": "Current estimated cost exceeds the limit; this is not real-price validation.",
+          "day_index": null,
+          "activity_ref": null,
+          "expected": "1",
+          "actual": "550.5"
+        }
+      ],
+      "version_before": null,
+      "version_after": 1,
+      "failure_state_preserved": null,
+      "unauthorized_mutations": [],
+      "concurrent_writer": false,
+      "fact_grounding_correct": null,
+      "version_conflict_correct": null,
+      "retrieval": null,
+      "checks": {
+        "persisted_draft": true,
+        "constraint_retention": true,
+        "context_provenance": true,
+        "decision": true,
+        "validation": true,
+        "no_unauthorized_mutation": true,
+        "expected_findings": true
+      },
+      "passed": true
+    },
+    {
+      "scenario_id": "initial_must_visit",
+      "category": "initial",
+      "decision": "draft_created",
+      "validation_status": "invalid",
+      "expected_decision": "draft_created",
+      "expected_status": "invalid",
+      "reason": null,
+      "changed_activity_ids": [
+        "activity-initial-1"
+      ],
+      "preserved_activity_ids": [],
+      "tool_calls": {
+        "search_poi": 0,
+        "get_poi": 0,
+        "get_driving_route": 0
+      },
+      "llm_calls": 1,
+      "reused_facts": 0,
+      "recollected_facts": 0,
+      "validation_findings": [
+        {
+          "type": "must_visit_missing",
+          "severity": "error",
+          "message": "Required attraction is absent.",
+          "day_index": null,
+          "activity_ref": null,
+          "expected": "颐和园",
+          "actual": null
+        }
+      ],
+      "version_before": null,
+      "version_after": 1,
+      "failure_state_preserved": null,
+      "unauthorized_mutations": [],
+      "concurrent_writer": false,
+      "fact_grounding_correct": null,
+      "version_conflict_correct": null,
+      "retrieval": null,
+      "checks": {
+        "persisted_draft": true,
+        "constraint_retention": true,
+        "context_provenance": true,
+        "decision": true,
+        "validation": true,
+        "no_unauthorized_mutation": true,
+        "expected_findings": true
+      },
+      "passed": true
+    },
+    {
+      "scenario_id": "initial_avoid",
+      "category": "initial",
+      "decision": "draft_created",
+      "validation_status": "invalid",
+      "expected_decision": "draft_created",
+      "expected_status": "invalid",
+      "reason": null,
+      "changed_activity_ids": [
+        "activity-initial-1"
+      ],
+      "preserved_activity_ids": [],
+      "tool_calls": {
+        "search_poi": 0,
+        "get_poi": 0,
+        "get_driving_route": 0
+      },
+      "llm_calls": 1,
+      "reused_facts": 0,
+      "recollected_facts": 0,
+      "validation_findings": [
+        {
+          "type": "avoided_attraction",
+          "severity": "error",
+          "message": "Avoided attraction is present.",
+          "day_index": 1,
+          "activity_ref": "days[0].attraction[0]",
+          "expected": "absent",
+          "actual": "故宫"
+        }
+      ],
+      "version_before": null,
+      "version_after": 1,
+      "failure_state_preserved": null,
+      "unauthorized_mutations": [],
+      "concurrent_writer": false,
+      "fact_grounding_correct": null,
+      "version_conflict_correct": null,
+      "retrieval": null,
+      "checks": {
+        "persisted_draft": true,
+        "constraint_retention": true,
+        "context_provenance": true,
+        "decision": true,
+        "validation": true,
+        "no_unauthorized_mutation": true,
+        "expected_findings": true
+      },
+      "passed": true
+    },
+    {
+      "scenario_id": "initial_route_requested",
+      "category": "initial",
+      "decision": "draft_created",
+      "validation_status": "unverifiable",
+      "expected_decision": "draft_created",
+      "expected_status": "unverifiable",
+      "reason": null,
+      "changed_activity_ids": [
+        "activity-initial-1"
+      ],
+      "preserved_activity_ids": [],
+      "tool_calls": {
+        "search_poi": 0,
+        "get_poi": 0,
+        "get_driving_route": 0
+      },
+      "llm_calls": 1,
+      "reused_facts": 0,
+      "recollected_facts": 0,
+      "validation_findings": [
+        {
+          "type": "route_feasibility_unverifiable",
+          "severity": "unknown",
+          "message": "Required driving estimate check could not be certified.",
+          "day_index": null,
+          "activity_ref": null,
+          "expected": "applicable server-collected driving estimate",
+          "actual": {
+            "reason": "insufficient_schedule_coverage",
+            "pair": null
+          }
+        }
+      ],
+      "version_before": null,
+      "version_after": 1,
+      "failure_state_preserved": null,
+      "unauthorized_mutations": [],
+      "concurrent_writer": false,
+      "fact_grounding_correct": null,
+      "version_conflict_correct": null,
+      "retrieval": null,
+      "checks": {
+        "persisted_draft": true,
+        "constraint_retention": true,
+        "context_provenance": true,
+        "decision": true,
+        "validation": true,
+        "no_unauthorized_mutation": true,
+        "expected_findings": true
+      },
+      "passed": true
+    },
+    {
+      "scenario_id": "route_enough_gap",
+      "category": "route",
+      "decision": "valid",
+      "validation_status": "valid",
+      "expected_decision": "valid",
+      "expected_status": "valid",
+      "reason": null,
+      "changed_activity_ids": [],
+      "preserved_activity_ids": [
+        "activity-A",
+        "activity-B"
+      ],
+      "tool_calls": {
+        "search_poi": 0,
+        "get_poi": 2,
+        "get_driving_route": 1
+      },
+      "llm_calls": 0,
+      "reused_facts": 0,
+      "recollected_facts": 1,
+      "validation_findings": [],
+      "version_before": 1,
+      "version_after": 1,
+      "failure_state_preserved": null,
+      "unauthorized_mutations": [],
+      "concurrent_writer": false,
+      "fact_grounding_correct": true,
+      "version_conflict_correct": null,
+      "retrieval": null,
+      "checks": {
+        "fact_grounding": true,
+        "read_only": true,
+        "unknown_not_certified": true,
+        "decision": true,
+        "validation": true,
+        "no_unauthorized_mutation": true,
+        "expected_findings": true
+      },
+      "passed": true
+    },
+    {
+      "scenario_id": "route_insufficient_gap",
+      "category": "route",
+      "decision": "invalid",
+      "validation_status": "invalid",
+      "expected_decision": "invalid",
+      "expected_status": "invalid",
+      "reason": null,
+      "changed_activity_ids": [],
+      "preserved_activity_ids": [
+        "activity-A",
+        "activity-B"
+      ],
+      "tool_calls": {
+        "search_poi": 0,
+        "get_poi": 2,
+        "get_driving_route": 1
+      },
+      "llm_calls": 0,
+      "reused_facts": 0,
+      "recollected_facts": 1,
+      "validation_findings": [
+        {
+          "type": "route_time_violation",
+          "severity": "error",
+          "message": "Activity gap is shorter than the provider driving estimate.",
+          "day_index": 1,
+          "activity_ref": null,
+          "expected": {
+            "required_seconds": 2100.0
+          },
+          "actual": {
+            "available_seconds": 1200,
+            "required_seconds": 2100.0,
+            "route_duration_seconds": 2100.0,
+            "origin": {
+              "activity_ref": "days[0].spots[0]",
+              "day_index": 1,
+              "date": "2026-10-06",
+              "activity_type": "attraction",
+              "entity_id": "A",
+              "name": "A",
+              "start_time": "09:00",
+              "end_time": "10:00",
+              "coordinates": {
+                "longitude": 120.0065,
+                "latitude": 30.0,
+                "system": "GCJ-02"
+              }
+            },
+            "destination": {
+              "activity_ref": "days[0].spots[1]",
+              "day_index": 1,
+              "date": "2026-10-06",
+              "activity_type": "attraction",
+              "entity_id": "B",
+              "name": "B",
+              "start_time": "10:20",
+              "end_time": "12:00",
+              "coordinates": {
+                "longitude": 120.0066,
+                "latitude": 30.0,
+                "system": "GCJ-02"
+              }
+            }
+          }
+        }
+      ],
+      "version_before": 1,
+      "version_after": 1,
+      "failure_state_preserved": true,
+      "unauthorized_mutations": [],
+      "concurrent_writer": false,
+      "fact_grounding_correct": true,
+      "version_conflict_correct": null,
+      "retrieval": null,
+      "checks": {
+        "fact_grounding": true,
+        "read_only": true,
+        "unknown_not_certified": true,
+        "decision": true,
+        "validation": true,
+        "no_unauthorized_mutation": true,
+        "expected_findings": true,
+        "failure_preserved": true
+      },
+      "passed": true
+    },
+    {
+      "scenario_id": "route_missing_evidence",
+      "category": "route",
+      "decision": "unverifiable",
+      "validation_status": "unverifiable",
+      "expected_decision": "unverifiable",
+      "expected_status": "unverifiable",
+      "reason": null,
+      "changed_activity_ids": [],
+      "preserved_activity_ids": [
+        "activity-A",
+        "activity-B"
+      ],
+      "tool_calls": {
+        "search_poi": 0,
+        "get_poi": 2,
+        "get_driving_route": 1
+      },
+      "llm_calls": 0,
+      "reused_facts": 0,
+      "recollected_facts": 1,
+      "validation_findings": [
+        {
+          "type": "route_feasibility_unverifiable",
+          "severity": "unknown",
+          "message": "Required driving estimate check could not be certified.",
+          "day_index": 1,
+          "activity_ref": null,
+          "expected": "applicable server-collected driving estimate",
+          "actual": {
+            "reason": "timeout",
+            "pair": {
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "A",
+                "name": "A",
+                "start_time": "09:00",
+                "end_time": "10:00",
+                "coordinates": {
+                  "longitude": 120.0065,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "B",
+                "name": "B",
+                "start_time": "10:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.0066,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "version_before": 1,
+      "version_after": 1,
+      "failure_state_preserved": true,
+      "unauthorized_mutations": [],
+      "concurrent_writer": false,
+      "fact_grounding_correct": true,
+      "version_conflict_correct": null,
+      "retrieval": null,
+      "checks": {
+        "fact_grounding": true,
+        "read_only": true,
+        "unknown_not_certified": true,
+        "decision": true,
+        "validation": true,
+        "no_unauthorized_mutation": true,
+        "expected_findings": true,
+        "failure_preserved": true
+      },
+      "passed": true
+    },
+    {
+      "scenario_id": "route_unsupported_mode",
+      "category": "route",
+      "decision": "unverifiable",
+      "validation_status": "unverifiable",
+      "expected_decision": "unverifiable",
+      "expected_status": "unverifiable",
+      "reason": null,
+      "changed_activity_ids": [],
+      "preserved_activity_ids": [
+        "activity-A",
+        "activity-B"
+      ],
+      "tool_calls": {
+        "search_poi": 0,
+        "get_poi": 0,
+        "get_driving_route": 0
+      },
+      "llm_calls": 0,
+      "reused_facts": 0,
+      "recollected_facts": 0,
+      "validation_findings": [
+        {
+          "type": "route_feasibility_unverifiable",
+          "severity": "unknown",
+          "message": "Required driving estimate check could not be certified.",
+          "day_index": 1,
+          "activity_ref": null,
+          "expected": "applicable server-collected driving estimate",
+          "actual": {
+            "reason": "unsupported_mode",
+            "pair": {
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "A",
+                "name": "A",
+                "start_time": "09:00",
+                "end_time": "10:00",
+                "coordinates": {
+                  "longitude": 120.0065,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "B",
+                "name": "B",
+                "start_time": "10:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.0066,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "version_before": 1,
+      "version_after": 1,
+      "failure_state_preserved": true,
+      "unauthorized_mutations": [],
+      "concurrent_writer": false,
+      "fact_grounding_correct": true,
+      "version_conflict_correct": null,
+      "retrieval": null,
+      "checks": {
+        "fact_grounding": true,
+        "read_only": true,
+        "unknown_not_certified": true,
+        "decision": true,
+        "validation": true,
+        "no_unauthorized_mutation": true,
+        "expected_findings": true,
+        "failure_preserved": true
+      },
+      "passed": true
+    },
+    {
+      "scenario_id": "replan_replace",
+      "category": "replanning",
+      "decision": "accepted",
+      "validation_status": "valid",
+      "expected_decision": "accepted",
+      "expected_status": "valid",
+      "reason": "ACCEPTED",
+      "changed_activity_ids": [
+        "activity-B",
+        "activity-X-new"
+      ],
+      "preserved_activity_ids": [
+        "activity-A",
+        "activity-C",
+        "activity-D",
+        "activity-E",
+        "activity-F"
+      ],
+      "tool_calls": {
+        "search_poi": 1,
+        "get_poi": 1,
+        "get_driving_route": 2
+      },
+      "llm_calls": 0,
+      "reused_facts": 2,
+      "recollected_facts": 2,
+      "validation_findings": [],
+      "version_before": 1,
+      "version_after": 2,
+      "failure_state_preserved": null,
+      "unauthorized_mutations": [],
+      "concurrent_writer": false,
+      "fact_grounding_correct": true,
+      "version_conflict_correct": null,
+      "retrieval": null,
+      "checks": {
+        "version_transition": true,
+        "zero_search_for_deterministic_edit": true,
+        "explicit_zero_llm": true,
+        "decision": true,
+        "validation": true,
+        "no_unauthorized_mutation": true,
+        "expected_findings": true,
+        "expected_reason": true,
+        "fact_grounding": true
+      },
+      "passed": true
+    },
+    {
+      "scenario_id": "replan_remove",
+      "category": "replanning",
+      "decision": "accepted",
+      "validation_status": "valid",
+      "expected_decision": "accepted",
+      "expected_status": "valid",
+      "reason": "ACCEPTED",
+      "changed_activity_ids": [
+        "activity-B"
+      ],
+      "preserved_activity_ids": [
+        "activity-A",
+        "activity-C",
+        "activity-D",
+        "activity-E",
+        "activity-F"
+      ],
+      "tool_calls": {
+        "search_poi": 0,
+        "get_poi": 0,
+        "get_driving_route": 1
+      },
+      "llm_calls": 0,
+      "reused_facts": 2,
+      "recollected_facts": 1,
+      "validation_findings": [],
+      "version_before": 1,
+      "version_after": 2,
+      "failure_state_preserved": null,
+      "unauthorized_mutations": [],
+      "concurrent_writer": false,
+      "fact_grounding_correct": true,
+      "version_conflict_correct": null,
+      "retrieval": null,
+      "checks": {
+        "version_transition": true,
+        "zero_search_for_deterministic_edit": true,
+        "explicit_zero_llm": true,
+        "decision": true,
+        "validation": true,
+        "no_unauthorized_mutation": true,
+        "expected_findings": true,
+        "expected_reason": true,
+        "fact_grounding": true
+      },
+      "passed": true
+    },
+    {
+      "scenario_id": "replan_add",
+      "category": "replanning",
+      "decision": "accepted",
+      "validation_status": "valid",
+      "expected_decision": "accepted",
+      "expected_status": "valid",
+      "reason": "ACCEPTED",
+      "changed_activity_ids": [
+        "activity-X-new"
+      ],
+      "preserved_activity_ids": [
+        "activity-A",
+        "activity-B",
+        "activity-C",
+        "activity-D",
+        "activity-E",
+        "activity-F"
+      ],
+      "tool_calls": {
+        "search_poi": 1,
+        "get_poi": 1,
+        "get_driving_route": 2
+      },
+      "llm_calls": 0,
+      "reused_facts": 3,
+      "recollected_facts": 2,
+      "validation_findings": [],
+      "version_before": 1,
+      "version_after": 2,
+      "failure_state_preserved": null,
+      "unauthorized_mutations": [],
+      "concurrent_writer": false,
+      "fact_grounding_correct": true,
+      "version_conflict_correct": null,
+      "retrieval": null,
+      "checks": {
+        "version_transition": true,
+        "zero_search_for_deterministic_edit": true,
+        "explicit_zero_llm": true,
+        "decision": true,
+        "validation": true,
+        "no_unauthorized_mutation": true,
+        "expected_findings": true,
+        "expected_reason": true,
+        "fact_grounding": true
+      },
+      "passed": true
+    },
+    {
+      "scenario_id": "replan_modify_time_violation",
+      "category": "replanning",
+      "decision": "rejected",
+      "validation_status": "invalid",
+      "expected_decision": "rejected",
+      "expected_status": "invalid",
+      "reason": "REPLAN_VALIDATION_FAILED",
+      "changed_activity_ids": [],
+      "preserved_activity_ids": [
+        "activity-A",
+        "activity-B",
+        "activity-C",
+        "activity-D",
+        "activity-E",
+        "activity-F"
+      ],
+      "tool_calls": {
+        "search_poi": 0,
+        "get_poi": 0,
+        "get_driving_route": 0
+      },
+      "llm_calls": 0,
+      "reused_facts": 4,
+      "recollected_facts": 0,
+      "validation_findings": [
+        {
+          "type": "route_time_violation",
+          "severity": "error",
+          "message": "Activity gap is shorter than the provider driving estimate.",
+          "day_index": 1,
+          "activity_ref": null,
+          "expected": {
+            "required_seconds": 600.0
+          },
+          "actual": {
+            "available_seconds": 300,
+            "required_seconds": 600.0,
+            "route_duration_seconds": 600.0,
+            "origin": {
+              "activity_ref": "days[0].spots[0]",
+              "day_index": 1,
+              "date": "2026-10-06",
+              "activity_type": "attraction",
+              "entity_id": "A",
+              "name": "A",
+              "start_time": "09:00",
+              "end_time": "10:00",
+              "coordinates": {
+                "longitude": 120.0065,
+                "latitude": 30.0,
+                "system": "GCJ-02"
+              }
+            },
+            "destination": {
+              "activity_ref": "days[0].spots[1]",
+              "day_index": 1,
+              "date": "2026-10-06",
+              "activity_type": "attraction",
+              "entity_id": "B",
+              "name": "B",
+              "start_time": "10:05",
+              "end_time": "12:00",
+              "coordinates": {
+                "longitude": 120.0066,
+                "latitude": 30.0,
+                "system": "GCJ-02"
+              }
+            }
+          }
+        }
+      ],
+      "version_before": 1,
+      "version_after": 1,
+      "failure_state_preserved": true,
+      "unauthorized_mutations": [],
+      "concurrent_writer": false,
+      "fact_grounding_correct": true,
+      "version_conflict_correct": null,
+      "retrieval": null,
+      "checks": {
+        "version_transition": true,
+        "zero_search_for_deterministic_edit": true,
+        "explicit_zero_llm": true,
+        "decision": true,
+        "validation": true,
+        "no_unauthorized_mutation": true,
+        "expected_findings": true,
+        "expected_reason": true,
+        "failure_preserved": true,
+        "fact_grounding": true
+      },
+      "passed": true
+    },
+    {
+      "scenario_id": "replan_must_visit_removal",
+      "category": "replanning",
+      "decision": "rejected",
+      "validation_status": null,
+      "expected_decision": "rejected",
+      "expected_status": null,
+      "reason": "CONSTRAINT_CONFLICT",
+      "changed_activity_ids": [],
+      "preserved_activity_ids": [
+        "activity-A",
+        "activity-B",
+        "activity-C",
+        "activity-D",
+        "activity-E",
+        "activity-F"
+      ],
+      "tool_calls": {
+        "search_poi": 0,
+        "get_poi": 0,
+        "get_driving_route": 0
+      },
+      "llm_calls": 0,
+      "reused_facts": 0,
+      "recollected_facts": 0,
+      "validation_findings": [],
+      "version_before": 1,
+      "version_after": 1,
+      "failure_state_preserved": true,
+      "unauthorized_mutations": [],
+      "concurrent_writer": false,
+      "fact_grounding_correct": null,
+      "version_conflict_correct": null,
+      "retrieval": null,
+      "checks": {
+        "version_transition": true,
+        "zero_search_for_deterministic_edit": true,
+        "explicit_zero_llm": true,
+        "decision": true,
+        "validation": true,
+        "no_unauthorized_mutation": true,
+        "expected_findings": true,
+        "expected_reason": true,
+        "failure_preserved": true
+      },
+      "passed": true
+    },
+    {
+      "scenario_id": "replan_provider_timeout",
+      "category": "replanning",
+      "decision": "unverifiable",
+      "validation_status": "unverifiable",
+      "expected_decision": "unverifiable",
+      "expected_status": "unverifiable",
+      "reason": "REPLAN_UNVERIFIABLE",
+      "changed_activity_ids": [],
+      "preserved_activity_ids": [
+        "activity-A",
+        "activity-B",
+        "activity-C",
+        "activity-D",
+        "activity-E",
+        "activity-F"
+      ],
+      "tool_calls": {
+        "search_poi": 1,
+        "get_poi": 1,
+        "get_driving_route": 2
+      },
+      "llm_calls": 0,
+      "reused_facts": 2,
+      "recollected_facts": 2,
+      "validation_findings": [
+        {
+          "type": "route_feasibility_unverifiable",
+          "severity": "unknown",
+          "message": "Required driving estimate check could not be certified.",
+          "day_index": 1,
+          "activity_ref": null,
+          "expected": "applicable server-collected driving estimate",
+          "actual": {
+            "reason": "timeout",
+            "pair": {
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "A",
+                "name": "A",
+                "start_time": "09:00",
+                "end_time": "10:00",
+                "coordinates": {
+                  "longitude": 120.0065,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "X",
+                "name": "X",
+                "start_time": "11:00",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.0088,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "route_feasibility_unverifiable",
+          "severity": "unknown",
+          "message": "Required driving estimate check could not be certified.",
+          "day_index": 1,
+          "activity_ref": null,
+          "expected": "applicable server-collected driving estimate",
+          "actual": {
+            "reason": "timeout",
+            "pair": {
+              "origin": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "X",
+                "name": "X",
+                "start_time": "11:00",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.0088,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[2]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "C",
+                "name": "C",
+                "start_time": "13:00",
+                "end_time": "14:00",
+                "coordinates": {
+                  "longitude": 120.0067,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "budget_unverifiable",
+          "severity": "unknown",
+          "message": "New transport relationship lacks applicable cost evidence.",
+          "day_index": null,
+          "activity_ref": null,
+          "expected": null,
+          "actual": {
+            "unknown_cost_pairs": [
+              "days[0].spots[0]->days[0].spots[1]",
+              "days[0].spots[1]->days[0].spots[2]"
+            ]
+          }
+        }
+      ],
+      "version_before": 1,
+      "version_after": 1,
+      "failure_state_preserved": true,
+      "unauthorized_mutations": [],
+      "concurrent_writer": false,
+      "fact_grounding_correct": true,
+      "version_conflict_correct": null,
+      "retrieval": null,
+      "checks": {
+        "version_transition": true,
+        "zero_search_for_deterministic_edit": true,
+        "explicit_zero_llm": true,
+        "decision": true,
+        "validation": true,
+        "no_unauthorized_mutation": true,
+        "expected_findings": true,
+        "expected_reason": true,
+        "failure_preserved": true,
+        "fact_grounding": true
+      },
+      "passed": true
+    },
+    {
+      "scenario_id": "replan_grounding_conflict",
+      "category": "replanning",
+      "decision": "rejected",
+      "validation_status": null,
+      "expected_decision": "rejected",
+      "expected_status": null,
+      "reason": "GROUNDING_CONFLICT",
+      "changed_activity_ids": [],
+      "preserved_activity_ids": [
+        "activity-A",
+        "activity-B",
+        "activity-C",
+        "activity-D",
+        "activity-E",
+        "activity-F"
+      ],
+      "tool_calls": {
+        "search_poi": 1,
+        "get_poi": 1,
+        "get_driving_route": 0
+      },
+      "llm_calls": 0,
+      "reused_facts": 0,
+      "recollected_facts": 0,
+      "validation_findings": [],
+      "version_before": 1,
+      "version_after": 1,
+      "failure_state_preserved": true,
+      "unauthorized_mutations": [],
+      "concurrent_writer": false,
+      "fact_grounding_correct": null,
+      "version_conflict_correct": null,
+      "retrieval": null,
+      "checks": {
+        "version_transition": true,
+        "zero_search_for_deterministic_edit": true,
+        "explicit_zero_llm": true,
+        "decision": true,
+        "validation": true,
+        "no_unauthorized_mutation": true,
+        "expected_findings": true,
+        "expected_reason": true,
+        "failure_preserved": true
+      },
+      "passed": true
+    },
+    {
+      "scenario_id": "selector_valid",
+      "category": "selector",
+      "decision": "accepted",
+      "validation_status": "valid",
+      "expected_decision": "accepted",
+      "expected_status": "valid",
+      "reason": "ACCEPTED",
+      "changed_activity_ids": [
+        "activity-B",
+        "activity-X-new"
+      ],
+      "preserved_activity_ids": [
+        "activity-A",
+        "activity-C",
+        "activity-D",
+        "activity-E",
+        "activity-F"
+      ],
+      "tool_calls": {
+        "search_poi": 1,
+        "get_poi": 1,
+        "get_driving_route": 2
+      },
+      "llm_calls": 1,
+      "reused_facts": 2,
+      "recollected_facts": 2,
+      "validation_findings": [],
+      "version_before": 1,
+      "version_after": 2,
+      "failure_state_preserved": null,
+      "unauthorized_mutations": [],
+      "concurrent_writer": false,
+      "fact_grounding_correct": true,
+      "version_conflict_correct": null,
+      "retrieval": null,
+      "checks": {
+        "version_transition": true,
+        "zero_search_for_deterministic_edit": true,
+        "explicit_zero_llm": true,
+        "decision": true,
+        "validation": true,
+        "no_unauthorized_mutation": true,
+        "expected_findings": true,
+        "expected_reason": true,
+        "fact_grounding": true
+      },
+      "passed": true
+    },
+    {
+      "scenario_id": "selector_hallucinated",
+      "category": "selector",
+      "decision": "rejected",
+      "validation_status": null,
+      "expected_decision": "rejected",
+      "expected_status": null,
+      "reason": "LLM_SELECTION_NOT_AUTHORIZED",
+      "changed_activity_ids": [],
+      "preserved_activity_ids": [
+        "activity-A",
+        "activity-B",
+        "activity-C",
+        "activity-D",
+        "activity-E",
+        "activity-F"
+      ],
+      "tool_calls": {
+        "search_poi": 1,
+        "get_poi": 0,
+        "get_driving_route": 0
+      },
+      "llm_calls": 1,
+      "reused_facts": 0,
+      "recollected_facts": 0,
+      "validation_findings": [],
+      "version_before": 1,
+      "version_after": 1,
+      "failure_state_preserved": true,
+      "unauthorized_mutations": [],
+      "concurrent_writer": false,
+      "fact_grounding_correct": null,
+      "version_conflict_correct": null,
+      "retrieval": null,
+      "checks": {
+        "version_transition": true,
+        "zero_search_for_deterministic_edit": true,
+        "explicit_zero_llm": true,
+        "decision": true,
+        "validation": true,
+        "no_unauthorized_mutation": true,
+        "expected_findings": true,
+        "expected_reason": true,
+        "failure_preserved": true
+      },
+      "passed": true
+    },
+    {
+      "scenario_id": "selector_injection_text",
+      "category": "selector",
+      "decision": "accepted",
+      "validation_status": "valid",
+      "expected_decision": "accepted",
+      "expected_status": "valid",
+      "reason": "ACCEPTED",
+      "changed_activity_ids": [
+        "activity-B",
+        "activity-X-new"
+      ],
+      "preserved_activity_ids": [
+        "activity-A",
+        "activity-C",
+        "activity-D",
+        "activity-E",
+        "activity-F"
+      ],
+      "tool_calls": {
+        "search_poi": 1,
+        "get_poi": 1,
+        "get_driving_route": 2
+      },
+      "llm_calls": 1,
+      "reused_facts": 2,
+      "recollected_facts": 2,
+      "validation_findings": [],
+      "version_before": 1,
+      "version_after": 2,
+      "failure_state_preserved": null,
+      "unauthorized_mutations": [],
+      "concurrent_writer": false,
+      "fact_grounding_correct": true,
+      "version_conflict_correct": null,
+      "retrieval": null,
+      "checks": {
+        "version_transition": true,
+        "zero_search_for_deterministic_edit": true,
+        "explicit_zero_llm": true,
+        "decision": true,
+        "validation": true,
+        "no_unauthorized_mutation": true,
+        "expected_findings": true,
+        "expected_reason": true,
+        "fact_grounding": true
+      },
+      "passed": true
+    },
+    {
+      "scenario_id": "selector_version_race",
+      "category": "selector",
+      "decision": "conflict",
+      "validation_status": null,
+      "expected_decision": "conflict",
+      "expected_status": null,
+      "reason": "VERSION_CONFLICT",
+      "changed_activity_ids": [],
+      "preserved_activity_ids": [
+        "activity-A",
+        "activity-B",
+        "activity-C",
+        "activity-D",
+        "activity-E",
+        "activity-F"
+      ],
+      "tool_calls": {
+        "search_poi": 1,
+        "get_poi": 0,
+        "get_driving_route": 0
+      },
+      "llm_calls": 1,
+      "reused_facts": 0,
+      "recollected_facts": 0,
+      "validation_findings": [],
+      "version_before": 1,
+      "version_after": 2,
+      "failure_state_preserved": true,
+      "unauthorized_mutations": [],
+      "concurrent_writer": true,
+      "fact_grounding_correct": null,
+      "version_conflict_correct": true,
+      "retrieval": null,
+      "checks": {
+        "version_transition": true,
+        "zero_search_for_deterministic_edit": true,
+        "explicit_zero_llm": true,
+        "decision": true,
+        "validation": true,
+        "no_unauthorized_mutation": true,
+        "expected_findings": true,
+        "expected_reason": true,
+        "failure_preserved": true,
+        "conflict_correct": true
+      },
+      "passed": true
+    },
+    {
+      "scenario_id": "rag_exact",
+      "category": "knowledge",
+      "decision": "success",
+      "validation_status": null,
+      "expected_decision": "success",
+      "expected_status": null,
+      "reason": null,
+      "changed_activity_ids": [],
+      "preserved_activity_ids": [
+        "activity-A",
+        "activity-B",
+        "activity-C",
+        "activity-D",
+        "activity-E",
+        "activity-F"
+      ],
+      "tool_calls": {
+        "search_poi": 0,
+        "get_poi": 0,
+        "get_driving_route": 0
+      },
+      "llm_calls": 0,
+      "reused_facts": 0,
+      "recollected_facts": 0,
+      "validation_findings": [],
+      "version_before": 1,
+      "version_after": 1,
+      "failure_state_preserved": null,
+      "unauthorized_mutations": [],
+      "concurrent_writer": false,
+      "fact_grounding_correct": null,
+      "version_conflict_correct": null,
+      "retrieval": {
+        "outcome": "success",
+        "chunk_ids": [
+          "chunk_1d520381f50b111c9b193b874e80f637b239bdba2298b8d878b923df211388d0",
+          "chunk_589cb61ea58f17e94977e65591f023fb291697e8cdd60b3017d0a10cf4552d5c",
+          "chunk_ea8179c8a0534d1b5269c998f332fecd9a682b0583872c7bcee8d3702e42b96d"
+        ],
+        "relevant_hits": 1,
+        "relevant_count": 1,
+        "errors": [],
+        "index_version": "93ec1ea2d9a1a9f4c1b68b70a099d7d245ca392ddcde8123b7d0f8df089a5734",
+        "retrieval_config_version": "72f9910a28686ca4f4f57e981f2b2969bfd24d012821dad65ae5d7e295c3d5ce"
+      },
+      "checks": {
+        "relevant_entity_hit": true,
+        "static_context_marker": true,
+        "decision": true,
+        "validation": true,
+        "no_unauthorized_mutation": true,
+        "expected_findings": true
+      },
+      "passed": true
+    },
+    {
+      "scenario_id": "rag_semantic_weakness",
+      "category": "knowledge",
+      "decision": "no_data",
+      "validation_status": null,
+      "expected_decision": "no_data",
+      "expected_status": null,
+      "reason": null,
+      "changed_activity_ids": [],
+      "preserved_activity_ids": [
+        "activity-A",
+        "activity-B",
+        "activity-C",
+        "activity-D",
+        "activity-E",
+        "activity-F"
+      ],
+      "tool_calls": {
+        "search_poi": 0,
+        "get_poi": 0,
+        "get_driving_route": 0
+      },
+      "llm_calls": 0,
+      "reused_facts": 0,
+      "recollected_facts": 0,
+      "validation_findings": [],
+      "version_before": 1,
+      "version_after": 1,
+      "failure_state_preserved": true,
+      "unauthorized_mutations": [],
+      "concurrent_writer": false,
+      "fact_grounding_correct": null,
+      "version_conflict_correct": null,
+      "retrieval": {
+        "outcome": "no_data",
+        "chunk_ids": [],
+        "relevant_hits": 0,
+        "relevant_count": 1,
+        "errors": [
+          "no_matching_knowledge"
+        ],
+        "index_version": "93ec1ea2d9a1a9f4c1b68b70a099d7d245ca392ddcde8123b7d0f8df089a5734",
+        "retrieval_config_version": "72f9910a28686ca4f4f57e981f2b2969bfd24d012821dad65ae5d7e295c3d5ce"
+      },
+      "checks": {
+        "documented_keyword_weakness": true,
+        "static_context_marker": true,
+        "decision": true,
+        "validation": true,
+        "no_unauthorized_mutation": true,
+        "expected_findings": true,
+        "failure_preserved": true
+      },
+      "passed": true
+    },
+    {
+      "scenario_id": "rag_unsupported",
+      "category": "knowledge",
+      "decision": "no_data",
+      "validation_status": null,
+      "expected_decision": "no_data",
+      "expected_status": null,
+      "reason": null,
+      "changed_activity_ids": [],
+      "preserved_activity_ids": [
+        "activity-A",
+        "activity-B",
+        "activity-C",
+        "activity-D",
+        "activity-E",
+        "activity-F"
+      ],
+      "tool_calls": {
+        "search_poi": 0,
+        "get_poi": 0,
+        "get_driving_route": 0
+      },
+      "llm_calls": 0,
+      "reused_facts": 0,
+      "recollected_facts": 0,
+      "validation_findings": [],
+      "version_before": 1,
+      "version_after": 1,
+      "failure_state_preserved": true,
+      "unauthorized_mutations": [],
+      "concurrent_writer": false,
+      "fact_grounding_correct": null,
+      "version_conflict_correct": null,
+      "retrieval": {
+        "outcome": "no_data",
+        "chunk_ids": [],
+        "relevant_hits": 0,
+        "relevant_count": 0,
+        "errors": [
+          "unsupported_destination"
+        ],
+        "index_version": "93ec1ea2d9a1a9f4c1b68b70a099d7d245ca392ddcde8123b7d0f8df089a5734",
+        "retrieval_config_version": "72f9910a28686ca4f4f57e981f2b2969bfd24d012821dad65ae5d7e295c3d5ce"
+      },
+      "checks": {
+        "static_context_marker": true,
+        "decision": true,
+        "validation": true,
+        "no_unauthorized_mutation": true,
+        "expected_findings": true,
+        "failure_preserved": true
+      },
+      "passed": true
+    },
+    {
+      "scenario_id": "rag_cache_provenance",
+      "category": "knowledge",
+      "decision": "success",
+      "validation_status": null,
+      "expected_decision": "success",
+      "expected_status": null,
+      "reason": null,
+      "changed_activity_ids": [],
+      "preserved_activity_ids": [
+        "activity-A",
+        "activity-B",
+        "activity-C",
+        "activity-D",
+        "activity-E",
+        "activity-F"
+      ],
+      "tool_calls": {
+        "search_poi": 0,
+        "get_poi": 0,
+        "get_driving_route": 0
+      },
+      "llm_calls": 0,
+      "reused_facts": 0,
+      "recollected_facts": 0,
+      "validation_findings": [],
+      "version_before": 1,
+      "version_after": 1,
+      "failure_state_preserved": null,
+      "unauthorized_mutations": [],
+      "concurrent_writer": false,
+      "fact_grounding_correct": null,
+      "version_conflict_correct": null,
+      "retrieval": {
+        "outcome": "success",
+        "chunk_ids": [
+          "chunk_1d520381f50b111c9b193b874e80f637b239bdba2298b8d878b923df211388d0",
+          "chunk_589cb61ea58f17e94977e65591f023fb291697e8cdd60b3017d0a10cf4552d5c",
+          "chunk_ea8179c8a0534d1b5269c998f332fecd9a682b0583872c7bcee8d3702e42b96d"
+        ],
+        "relevant_hits": 1,
+        "relevant_count": 1,
+        "errors": [],
+        "index_version": "93ec1ea2d9a1a9f4c1b68b70a099d7d245ca392ddcde8123b7d0f8df089a5734",
+        "retrieval_config_version": "72f9910a28686ca4f4f57e981f2b2969bfd24d012821dad65ae5d7e295c3d5ce"
+      },
+      "checks": {
+        "valid_cache_hit": true,
+        "stale_version_miss": true,
+        "forged_membership_miss": true,
+        "static_context_marker": true,
+        "decision": true,
+        "validation": true,
+        "no_unauthorized_mutation": true,
+        "expected_findings": true
+      },
+      "passed": true
+    }
+  ]
+}

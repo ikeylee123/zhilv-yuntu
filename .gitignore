@@ -60,3 +60,15 @@ pnpm-debug.log*
 Thumbs.db
 .idea/
 .vscode/
+
+# Phase 4 reviewable engineering evidence
+!docs/final-architecture.md
+!docs/final-benchmark.md
+!docs/claim-safety.md
+!docs/resume-evidence.md
+!docs/interview-notes.md
+!docs/demo-checklist.md
+!docs/test-inventory.md
+!docs/phase4-e2e-results.json
+!docs/phase4-frozen-results.json
+!docs/phase4-regression-results.json

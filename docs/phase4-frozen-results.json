@@ -1,0 +1,616 @@
+{
+  "metadata": {
+    "git_commit": "dcee713c065bd75251f81fbb1784e6d5b4d1f5f8",
+    "harness_sha256": "7b1cb9aedaa9cdd642d5cedeecb45915243f28378ac2acae44efa7aa5586c366",
+    "working_tree_dirty": true,
+    "date": "2026-10-06",
+    "python": "3.13.5",
+    "mode": "offline",
+    "providers": "mock/replay",
+    "datasets": {
+      "validator": {
+        "path": "backend/eval/planning_eval_cases.json",
+        "sha256": "6c3e73cccfff18688143b5c5d1ead7009baa1d4ce0cd17c854ddec299f37e0d1"
+      },
+      "route": {
+        "path": "backend/eval/tool_grounded_eval_cases.json",
+        "sha256": "5c754f64b77a63dff046fdcdfc994d4be22016945c9b097ba5b6fe6a09379ffb"
+      },
+      "mcp": {
+        "path": "backend/eval/mcp_contract_cases.json",
+        "sha256": "88c03e8fdbbf1f48a73cb4f998680bb7852000abe3c9238994f9ee5d3963ff4e"
+      },
+      "replanning": {
+        "path": "backend/eval/replanning_eval_cases.json",
+        "sha256": "d4eb8714a101e84a8e12c719f5711682d2cb3c40f107b16e2aeaf7b835bf6c6f"
+      },
+      "selector": {
+        "path": "backend/eval/candidate_selection_eval_cases.json",
+        "sha256": "3a9e4a53bc36a7186ffd1cb5cf95e37c93b8e5aa368c4aa2b0ab72fb93333449"
+      },
+      "rag_v2": {
+        "path": "backend/eval/rag_eval_cases_v2.json",
+        "sha256": "22fc0f90a525edb909cab190ae060d950fedda6d549e830d64deaec6e6edd58a"
+      }
+    }
+  },
+  "network_attempts": 0,
+  "reports": {
+    "validator": {
+      "cases": 67,
+      "category_counts": {
+        "valid": 15,
+        "date": 5,
+        "time": 5,
+        "overlap": 10,
+        "duplicate": 5,
+        "must_visit": 5,
+        "avoid": 5,
+        "budget": 5,
+        "window": 5,
+        "unknown": 6,
+        "mixed": 1
+      },
+      "overall_validation_accuracy": 1.0,
+      "binary_validity_accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "fpr": 0.0,
+      "fnr": 0.0,
+      "confusion": {
+        "tp": 52,
+        "tn": 15,
+        "fp": 0,
+        "fn": 0
+      },
+      "per_violation_type": {
+        "date_range": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "detection_rate": 1.0,
+          "precision": 1.0
+        },
+        "day_count": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "detection_rate": 1.0,
+          "precision": 1.0
+        },
+        "day_date": {
+          "tp": 3,
+          "fp": 0,
+          "fn": 0,
+          "detection_rate": 1.0,
+          "precision": 1.0
+        },
+        "time_format": {
+          "tp": 3,
+          "fp": 0,
+          "fn": 0,
+          "detection_rate": 1.0,
+          "precision": 1.0
+        },
+        "time_order": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "detection_rate": 1.0,
+          "precision": 1.0
+        },
+        "activity_overlap": {
+          "tp": 10,
+          "fp": 0,
+          "fn": 0,
+          "detection_rate": 1.0,
+          "precision": 1.0
+        },
+        "duplicate_attraction": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 0,
+          "detection_rate": 1.0,
+          "precision": 1.0
+        },
+        "must_visit_missing": {
+          "tp": 6,
+          "fp": 0,
+          "fn": 0,
+          "detection_rate": 1.0,
+          "precision": 1.0
+        },
+        "avoided_attraction": {
+          "tp": 6,
+          "fp": 0,
+          "fn": 0,
+          "detection_rate": 1.0,
+          "precision": 1.0
+        },
+        "budget_exceeded": {
+          "tp": 6,
+          "fp": 0,
+          "fn": 0,
+          "detection_rate": 1.0,
+          "precision": 1.0
+        },
+        "daily_time_window": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 0,
+          "detection_rate": 1.0,
+          "precision": 1.0
+        }
+      },
+      "unknown_detection_rate": 1.0,
+      "unknown_precision": 1.0,
+      "mismatches": []
+    },
+    "route": {
+      "cases": 48,
+      "category_counts": {
+        "route": 16,
+        "identity": 8,
+        "freshness": 8,
+        "failure": 8,
+        "combined": 8
+      },
+      "three_state_status_accuracy": 1.0,
+      "binary_validity_accuracy": 1.0,
+      "confusion": {
+        "tp": 35,
+        "tn": 13,
+        "fp": 0,
+        "fn": 0
+      },
+      "violation_precision": 1.0,
+      "violation_recall": 1.0,
+      "per_violation_type": {
+        "activity_overlap": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "budget_exceeded": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "route_feasibility_unverifiable": {
+          "tp": 30,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "route_time_violation": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        }
+      },
+      "route_time_violation_detection_rate": 1.0,
+      "route_feasibility_unverifiable_detection_rate": 1.0,
+      "unknown_detection_rate": 1.0,
+      "unknown_precision": 1.0,
+      "known_fact_utilization_rate": 1.0,
+      "eligible_known_pairs": 19,
+      "unexpected_verified_pairs": 0,
+      "route_coverage": {
+        "required_pairs": 48,
+        "verified_pairs": 19,
+        "unknown_pairs": 29,
+        "skipped_pairs": 0
+      },
+      "route_verified_fraction": 0.3958333333333333,
+      "mismatches": []
+    },
+    "mcp": {
+      "cases": 28,
+      "discovery_ok": true,
+      "contract_equivalence_rate": 1.0,
+      "error_mapping_accuracy": 1.0,
+      "tool_schema_pass_rate": 1.0,
+      "replay_determinism": 1.0,
+      "same_run_duplicate_suppression_rate": 1.0,
+      "mcp_protocol_success_rate": 1.0,
+      "mismatches": []
+    },
+    "replanning": {
+      "cases": 50,
+      "distribution": {
+        "replace": 10,
+        "remove": 8,
+        "add": 8,
+        "modify_time": 8,
+        "version_security": 8,
+        "facts": 8
+      },
+      "metrics": {
+        "Scope accuracy": [
+          50,
+          50
+        ],
+        "Preserved projection accuracy": [
+          50,
+          50
+        ],
+        "Merge correctness": [
+          50,
+          50
+        ],
+        "Fact invalidation accuracy": [
+          50,
+          50
+        ],
+        "Fact reuse accuracy": [
+          50,
+          50
+        ],
+        "Fact recollection accuracy": [
+          50,
+          50
+        ],
+        "Three-state validation accuracy": [
+          50,
+          50
+        ],
+        "Decision accuracy": [
+          50,
+          50
+        ],
+        "Active-plan change accuracy": [
+          50,
+          50
+        ],
+        "Active-plan preservation on failure": [
+          27,
+          27
+        ],
+        "Version conflict rejection": [
+          2,
+          2
+        ],
+        "Unauthorized mutation detection": [
+          1,
+          1
+        ]
+      },
+      "mismatches": []
+    },
+    "selector": {
+      "mode": "offline_replay",
+      "cases": 36,
+      "distribution": {
+        "simple_preference": 10,
+        "hard_constraint_context": 6,
+        "similar_candidates": 6,
+        "malicious_text": 6,
+        "invalid_output": 4,
+        "provider_failure": 4
+      },
+      "schema_compliance": [
+        28,
+        36
+      ],
+      "authorized_selection": [
+        26,
+        36
+      ],
+      "acceptable_choice": [
+        26,
+        36
+      ],
+      "authorized_id_enforcement": [
+        2,
+        2
+      ],
+      "invalid_schema_enforcement": [
+        3,
+        3
+      ],
+      "selection_failure_mapping": [
+        10,
+        10
+      ],
+      "contract_matches": [
+        36,
+        36
+      ],
+      "one_shot_calls": [
+        36,
+        36
+      ],
+      "median_latency_ms": 0.31934992875903845,
+      "median_total_tokens": null,
+      "mismatches": [],
+      "interpretation": "Injected replay outputs test enforcement and failure mapping, not actual model preference or injection resistance"
+    },
+    "rag_v2": {
+      "mode": "keyword_baseline",
+      "live": false,
+      "index_version": "93ec1ea2d9a1a9f4c1b68b70a099d7d245ca392ddcde8123b7d0f8df089a5734",
+      "retrieval_config_version": "72f9910a28686ca4f4f57e981f2b2969bfd24d012821dad65ae5d7e295c3d5ce",
+      "summary": {
+        "cases": 60,
+        "recall@1": 0.6296296296296297,
+        "recall@1_denominator": 54,
+        "recall@3": 0.7222222222222222,
+        "recall@3_denominator": 54,
+        "recall@5": 0.7407407407407407,
+        "recall@5_denominator": 54,
+        "recall@6": 0.7407407407407407,
+        "recall@6_denominator": 54,
+        "hit@1": 0.7037037037037037,
+        "hit@1_denominator": 54,
+        "hit@3": 0.7222222222222222,
+        "hit@3_denominator": 54,
+        "hit@5": 0.7407407407407407,
+        "hit@5_denominator": 54,
+        "hit@6": 0.7407407407407407,
+        "hit@6_denominator": 54,
+        "mrr": 0.7166666666666667,
+        "mrr_denominator": 54,
+        "no_result_correct": 1.0,
+        "no_result_correct_denominator": 6,
+        "failure_class_correct": 1.0,
+        "failure_class_correct_denominator": 6,
+        "evidence_group_coverage": 1.0,
+        "evidence_group_coverage_denominator": 8,
+        "complete_evidence_coverage": 1.0,
+        "complete_evidence_coverage_denominator": 8,
+        "outcome_correct": 0.8,
+        "outcome_correct_denominator": 60,
+        "returned_chunks": 125,
+        "destination_contamination_rate": 0.0,
+        "duplicate_result_rate": 0.0
+      },
+      "categories": {
+        "adversarial_noisy": {
+          "cases": 6,
+          "recall@1": 1.0,
+          "recall@1_denominator": 6,
+          "recall@3": 1.0,
+          "recall@3_denominator": 6,
+          "recall@5": 1.0,
+          "recall@5_denominator": 6,
+          "recall@6": 1.0,
+          "recall@6_denominator": 6,
+          "hit@1": 1.0,
+          "hit@1_denominator": 6,
+          "hit@3": 1.0,
+          "hit@3_denominator": 6,
+          "hit@5": 1.0,
+          "hit@5_denominator": 6,
+          "hit@6": 1.0,
+          "hit@6_denominator": 6,
+          "mrr": 1.0,
+          "mrr_denominator": 6,
+          "no_result_correct": null,
+          "no_result_correct_denominator": 0,
+          "failure_class_correct": null,
+          "failure_class_correct_denominator": 0,
+          "evidence_group_coverage": null,
+          "evidence_group_coverage_denominator": 0,
+          "complete_evidence_coverage": null,
+          "complete_evidence_coverage_denominator": 0,
+          "outcome_correct": 1.0,
+          "outcome_correct_denominator": 6,
+          "returned_chunks": 14,
+          "destination_contamination_rate": 0.0,
+          "duplicate_result_rate": 0.0
+        },
+        "destination_disambiguation": {
+          "cases": 10,
+          "recall@1": 1.0,
+          "recall@1_denominator": 10,
+          "recall@3": 1.0,
+          "recall@3_denominator": 10,
+          "recall@5": 1.0,
+          "recall@5_denominator": 10,
+          "recall@6": 1.0,
+          "recall@6_denominator": 10,
+          "hit@1": 1.0,
+          "hit@1_denominator": 10,
+          "hit@3": 1.0,
+          "hit@3_denominator": 10,
+          "hit@5": 1.0,
+          "hit@5_denominator": 10,
+          "hit@6": 1.0,
+          "hit@6_denominator": 10,
+          "mrr": 1.0,
+          "mrr_denominator": 10,
+          "no_result_correct": null,
+          "no_result_correct_denominator": 0,
+          "failure_class_correct": null,
+          "failure_class_correct_denominator": 0,
+          "evidence_group_coverage": null,
+          "evidence_group_coverage_denominator": 0,
+          "complete_evidence_coverage": null,
+          "complete_evidence_coverage_denominator": 0,
+          "outcome_correct": 1.0,
+          "outcome_correct_denominator": 10,
+          "returned_chunks": 20,
+          "destination_contamination_rate": 0.0,
+          "duplicate_result_rate": 0.0
+        },
+        "exact_lexical": {
+          "cases": 12,
+          "recall@1": 1.0,
+          "recall@1_denominator": 12,
+          "recall@3": 1.0,
+          "recall@3_denominator": 12,
+          "recall@5": 1.0,
+          "recall@5_denominator": 12,
+          "recall@6": 1.0,
+          "recall@6_denominator": 12,
+          "hit@1": 1.0,
+          "hit@1_denominator": 12,
+          "hit@3": 1.0,
+          "hit@3_denominator": 12,
+          "hit@5": 1.0,
+          "hit@5_denominator": 12,
+          "hit@6": 1.0,
+          "hit@6_denominator": 12,
+          "mrr": 1.0,
+          "mrr_denominator": 12,
+          "no_result_correct": null,
+          "no_result_correct_denominator": 0,
+          "failure_class_correct": null,
+          "failure_class_correct_denominator": 0,
+          "evidence_group_coverage": null,
+          "evidence_group_coverage_denominator": 0,
+          "complete_evidence_coverage": null,
+          "complete_evidence_coverage_denominator": 0,
+          "outcome_correct": 1.0,
+          "outcome_correct_denominator": 12,
+          "returned_chunks": 27,
+          "destination_contamination_rate": 0.0,
+          "duplicate_result_rate": 0.0
+        },
+        "failure_unsupported": {
+          "cases": 6,
+          "recall@1": null,
+          "recall@1_denominator": 0,
+          "recall@3": null,
+          "recall@3_denominator": 0,
+          "recall@5": null,
+          "recall@5_denominator": 0,
+          "recall@6": null,
+          "recall@6_denominator": 0,
+          "hit@1": null,
+          "hit@1_denominator": 0,
+          "hit@3": null,
+          "hit@3_denominator": 0,
+          "hit@5": null,
+          "hit@5_denominator": 0,
+          "hit@6": null,
+          "hit@6_denominator": 0,
+          "mrr": null,
+          "mrr_denominator": 0,
+          "no_result_correct": 1.0,
+          "no_result_correct_denominator": 6,
+          "failure_class_correct": 1.0,
+          "failure_class_correct_denominator": 6,
+          "evidence_group_coverage": null,
+          "evidence_group_coverage_denominator": 0,
+          "complete_evidence_coverage": null,
+          "complete_evidence_coverage_denominator": 0,
+          "outcome_correct": 1.0,
+          "outcome_correct_denominator": 6,
+          "returned_chunks": 0,
+          "destination_contamination_rate": null,
+          "duplicate_result_rate": null
+        },
+        "multi_chunk_evidence": {
+          "cases": 8,
+          "recall@1": 0.5,
+          "recall@1_denominator": 8,
+          "recall@3": 1.0,
+          "recall@3_denominator": 8,
+          "recall@5": 1.0,
+          "recall@5_denominator": 8,
+          "recall@6": 1.0,
+          "recall@6_denominator": 8,
+          "hit@1": 1.0,
+          "hit@1_denominator": 8,
+          "hit@3": 1.0,
+          "hit@3_denominator": 8,
+          "hit@5": 1.0,
+          "hit@5_denominator": 8,
+          "hit@6": 1.0,
+          "hit@6_denominator": 8,
+          "mrr": 1.0,
+          "mrr_denominator": 8,
+          "no_result_correct": null,
+          "no_result_correct_denominator": 0,
+          "failure_class_correct": null,
+          "failure_class_correct_denominator": 0,
+          "evidence_group_coverage": 1.0,
+          "evidence_group_coverage_denominator": 8,
+          "complete_evidence_coverage": 1.0,
+          "complete_evidence_coverage_denominator": 8,
+          "outcome_correct": 1.0,
+          "outcome_correct_denominator": 8,
+          "returned_chunks": 28,
+          "destination_contamination_rate": 0.0,
+          "duplicate_result_rate": 0.0
+        },
+        "query_rewrite": {
+          "cases": 6,
+          "recall@1": 0.3333333333333333,
+          "recall@1_denominator": 6,
+          "recall@3": 0.5,
+          "recall@3_denominator": 6,
+          "recall@5": 0.6666666666666666,
+          "recall@5_denominator": 6,
+          "recall@6": 0.6666666666666666,
+          "recall@6_denominator": 6,
+          "hit@1": 0.3333333333333333,
+          "hit@1_denominator": 6,
+          "hit@3": 0.5,
+          "hit@3_denominator": 6,
+          "hit@5": 0.6666666666666666,
+          "hit@5_denominator": 6,
+          "hit@6": 0.6666666666666666,
+          "hit@6_denominator": 6,
+          "mrr": 0.45,
+          "mrr_denominator": 6,
+          "no_result_correct": null,
+          "no_result_correct_denominator": 0,
+          "failure_class_correct": null,
+          "failure_class_correct_denominator": 0,
+          "evidence_group_coverage": null,
+          "evidence_group_coverage_denominator": 0,
+          "complete_evidence_coverage": null,
+          "complete_evidence_coverage_denominator": 0,
+          "outcome_correct": 1.0,
+          "outcome_correct_denominator": 6,
+          "returned_chunks": 36,
+          "destination_contamination_rate": 0.0,
+          "duplicate_result_rate": 0.0
+        },
+        "semantic_preference": {
+          "cases": 12,
+          "recall@1": 0.0,
+          "recall@1_denominator": 12,
+          "recall@3": 0.0,
+          "recall@3_denominator": 12,
+          "recall@5": 0.0,
+          "recall@5_denominator": 12,
+          "recall@6": 0.0,
+          "recall@6_denominator": 12,
+          "hit@1": 0.0,
+          "hit@1_denominator": 12,
+          "hit@3": 0.0,
+          "hit@3_denominator": 12,
+          "hit@5": 0.0,
+          "hit@5_denominator": 12,
+          "hit@6": 0.0,
+          "hit@6_denominator": 12,
+          "mrr": 0.0,
+          "mrr_denominator": 12,
+          "no_result_correct": null,
+          "no_result_correct_denominator": 0,
+          "failure_class_correct": null,
+          "failure_class_correct_denominator": 0,
+          "evidence_group_coverage": null,
+          "evidence_group_coverage_denominator": 0,
+          "complete_evidence_coverage": null,
+          "complete_evidence_coverage_denominator": 0,
+          "outcome_correct": 0.0,
+          "outcome_correct_denominator": 12,
+          "returned_chunks": 0,
+          "destination_contamination_rate": null,
+          "duplicate_result_rate": null
+        }
+      }
+    }
+  }
+}

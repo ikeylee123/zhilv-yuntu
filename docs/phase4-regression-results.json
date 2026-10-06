@@ -1,0 +1,257 @@
+{
+  "metadata": {
+    "git_commit": "dcee713c065bd75251f81fbb1784e6d5b4d1f5f8",
+    "date": "2026-10-06",
+    "runner_sha256": "66fc3322b9c7e7b5d54fcb3c0bf5552603cbcc74a9a510508e0e353db8bb5bdf",
+    "test_source_sha256": {
+      "test_amap_secret_logging.py": "a15ef822d64bb9b924da578d1f90bdb3e665c4620ddf58f8e5b3c42ca4ad048f",
+      "test_api_trip.py": "0c7329eac30c45727c4caf3c645c745ef52942832b7f17d4ca91a12f636ea2d0",
+      "test_authoritative_state.py": "0792760269ad897b3a663ed114017390a6dd36e5b483fdbe0a38d8dbe105904b",
+      "test_candidate_selection_evaluation.py": "84ad5394354e875feec1e03f10da4397447e757eaa2d1f962defed4a8024c973",
+      "test_candidate_selector.py": "839469bdc85af51a47f2f1abf46ee204b8006218c73894eb338e8ab60ae55676",
+      "test_candidate_selector_hardening.py": "9d347298bfe066d30623eb1b92e29d53bd30ca7fcddd2eac8a02d25044312197",
+      "test_city_registry_service.py": "c0d17185e1d2512d33da3b73a8dddcb93aea451b9962321a1d924ffcb9f7c127",
+      "test_city_resolver_service.py": "2312e1764b15df7b083f600fa98fcbdd4b24dd4a738a46519fa4d3a00ecb96e4",
+      "test_dynamic_trip_service.py": "ec9b60d89f31ac48493095c91d28a086ba9f5baad85b8420fbb696bff0244ad6",
+      "test_end_to_end_evaluation.py": "2cc7bb38b5b1a3385bba3bfcb748e141401a26aa77fe3419c19c2955cb245c35",
+      "test_knowledge_validation.py": "1089b833af208df729c50ff4c4fc4bda5eaac6ff7125b1fd7f206f092f06b232",
+      "test_mcp_gateway.py": "d84548675bd67e647fa84b8a3a2cf923e065e9aad3bc475524c88c3f580066e6",
+      "test_models_schemas.py": "c00863f6750075fa4230cf19cdd47e3f7adf56f2d8777c215e1cee3c806dadd8",
+      "test_place_candidate_service.py": "f20120504b8e0294378828f01c3099112583cbb98c4d80293f38d575e888050e",
+      "test_plan_patch_service.py": "6ce5b49e80b78721d904067116b8e7b67a2920b21f531cd11ebbc53e4c9bfa22",
+      "test_plan_validator.py": "c054e9401ff8c0ac03b95b082cbdec9a6c040f6e84e7cd2d1ebd8e633bc4055a",
+      "test_planning_evaluation.py": "c69a258050ecafbdbfd93abe5f4733589cc1b08efbfda18bc5019ab2ce2702fa",
+      "test_planning_fact_service.py": "3523055527bd4b3f6a8257b8474121d937d5a49f4e2e7df3c8637c01e28e7d14",
+      "test_planning_hardening.py": "22c200f3dd4588b93ddd9ecf72608018ff639da126413cc49f38e9e3e852e6a3",
+      "test_planning_workflow.py": "1cd3e589f2916e37ca1e69d744931008bb9b461bb0cc8aede2aeaf90bec11c2d",
+      "test_rag_destination_metadata.py": "9f2d490d80f0734d0403b4fa0727368fcf482b8ffc9a71f2ac91aff88dcd0757",
+      "test_rag_eval_cases.py": "1c8809b29b34afb633a5bff0b7962d942aab84394954bc51e3f05ddfb8bbffe7",
+      "test_rag_evaluation_v2.py": "2df16cf7fd61451db2e5d47286269356bd856ba96fd4cdb2248c30c6c052a665",
+      "test_rag_hardening.py": "603470169886bc8bb9d1c90a92a064a0b698c83acda71d9dcaeab9ffc1aeb08f",
+      "test_rag_index.py": "11ba6ac55ee2768eaaa0d90f721a5bc41f6a39db338e1fb6bd0ec397bf29dc28",
+      "test_rag_integrity_hardening.py": "f72b44f5b6e4ce748b56e189a29d28f18478152f2554ab468d44301b2d7f2ff5",
+      "test_rag_retriever.py": "5134f545e54959fbd686971d01f66cbdc12580c359c1f6b5a28dbf05fded82e8",
+      "test_rag_tool.py": "3bd93ac3d14174a9e5b0682baf4decaa3586f0e1dcf8ff0de8e993e5aa37e3d7",
+      "test_replanning_candidates.py": "83ebee867309ef123d1a036430a1424be0f997388d0af3d052af89d1dfa0a2d2",
+      "test_replanning_commit.py": "47316ce7527a168a73956fe4b4e6d35bb8f8fbc77258157b01021a6eaa6b3d98",
+      "test_replanning_correctness_hardening.py": "5132ff100d8dbd00399356577d9b28103623ef1b7491c65b7487ed3ac10e8870",
+      "test_replanning_evaluation.py": "44eda85159150ff7af440696fadafe434a661ca0994af014979ba8db0b4c0428",
+      "test_replanning_facts.py": "65918e7dd9504db6a3a7dc7301fcb1dc31b782bef20a35042a926f23186e77c7",
+      "test_replanning_llm_selection.py": "e31a910af76186726f40b54d11444f130b4f1dfb4af78e7f7437bc38888378ec",
+      "test_replanning_preservation.py": "8b824652045dc429be7e90e4712b58cba44bbc7ce0d1fd83b838b5c55f372184",
+      "test_replanning_scope.py": "5ae9519678df47d24377c85ea07cd80c82fccb81686c9b755bce4ecafb10c197",
+      "test_replanning_tool_efficiency.py": "3cafd5d89a80f5d81bc301acb1ff73cb2969bfb41fb1d5da8489f4482bff4c49",
+      "test_route_facts.py": "2eaef14306e97b07a92c10344520e5b31af2c08a95136c6f1dfe2991d1290dae",
+      "test_route_hardening.py": "b668d1e8dfd13e23e52a0b53b136076f2c0e449710ee2228788f5a9c2642212e",
+      "test_route_workflow.py": "7156bc19ad57fcb3288236a008593becac786481aa54caa254913bd5b760c1b5",
+      "test_services_trip.py": "ef1c9ca5053fe3c12de7d0e9ad2b0b86849f444781da7bd241d046951acda4df",
+      "test_state_boundary_hardening.py": "c3cfd2695e5eb0ac891c52bc981f7942641974fa3f4f8f531e9541279c6906cd",
+      "test_storage_service.py": "4f3908ae28b2e8a97998d65a1eedeb87fd1890916c8df917ef952c8fe321f188",
+      "test_tool_adapter.py": "8826e9889b132397a38adb41a092b8bf2be1e97cf543b7d764cccdcd0b4a06a6",
+      "test_tool_contracts.py": "3c4836512d764ef7235a80c2b4db3b84101e7e10bcdf2d78e2ea00df3e57ea2c",
+      "test_tool_grounded_evaluation.py": "6276b6627875c5c78658af19b877da1801c0dc9008ece5b4993bd830f60209ff",
+      "test_trip_planner_agent.py": "f2fda801ef101225f3dfff443f989cc9ee84a5011ed18b447342954be61897bc"
+    }
+  },
+  "suite": "full",
+  "python": "3.13.5",
+  "mode": "offline",
+  "providers": "mock/replay",
+  "passed": 1308,
+  "failed": 0,
+  "skipped": 0,
+  "collection_errors": [],
+  "network_attempts": 0,
+  "test_functions": 420,
+  "expanded_instances": 1308,
+  "files": {
+    "test_amap_secret_logging.py": {
+      "test_functions": 2,
+      "expanded_instances": 15
+    },
+    "test_api_trip.py": {
+      "test_functions": 20,
+      "expanded_instances": 20
+    },
+    "test_authoritative_state.py": {
+      "test_functions": 23,
+      "expanded_instances": 47
+    },
+    "test_candidate_selection_evaluation.py": {
+      "test_functions": 2,
+      "expanded_instances": 37
+    },
+    "test_candidate_selector.py": {
+      "test_functions": 6,
+      "expanded_instances": 33
+    },
+    "test_candidate_selector_hardening.py": {
+      "test_functions": 14,
+      "expanded_instances": 73
+    },
+    "test_city_registry_service.py": {
+      "test_functions": 5,
+      "expanded_instances": 8
+    },
+    "test_city_resolver_service.py": {
+      "test_functions": 8,
+      "expanded_instances": 8
+    },
+    "test_dynamic_trip_service.py": {
+      "test_functions": 5,
+      "expanded_instances": 5
+    },
+    "test_end_to_end_evaluation.py": {
+      "test_functions": 4,
+      "expanded_instances": 8
+    },
+    "test_knowledge_validation.py": {
+      "test_functions": 2,
+      "expanded_instances": 2
+    },
+    "test_mcp_gateway.py": {
+      "test_functions": 11,
+      "expanded_instances": 46
+    },
+    "test_models_schemas.py": {
+      "test_functions": 7,
+      "expanded_instances": 7
+    },
+    "test_place_candidate_service.py": {
+      "test_functions": 9,
+      "expanded_instances": 9
+    },
+    "test_plan_patch_service.py": {
+      "test_functions": 2,
+      "expanded_instances": 15
+    },
+    "test_plan_validator.py": {
+      "test_functions": 21,
+      "expanded_instances": 41
+    },
+    "test_planning_evaluation.py": {
+      "test_functions": 4,
+      "expanded_instances": 70
+    },
+    "test_planning_fact_service.py": {
+      "test_functions": 13,
+      "expanded_instances": 41
+    },
+    "test_planning_hardening.py": {
+      "test_functions": 9,
+      "expanded_instances": 38
+    },
+    "test_planning_workflow.py": {
+      "test_functions": 6,
+      "expanded_instances": 7
+    },
+    "test_rag_destination_metadata.py": {
+      "test_functions": 5,
+      "expanded_instances": 5
+    },
+    "test_rag_eval_cases.py": {
+      "test_functions": 2,
+      "expanded_instances": 2
+    },
+    "test_rag_evaluation_v2.py": {
+      "test_functions": 12,
+      "expanded_instances": 13
+    },
+    "test_rag_hardening.py": {
+      "test_functions": 32,
+      "expanded_instances": 85
+    },
+    "test_rag_index.py": {
+      "test_functions": 8,
+      "expanded_instances": 15
+    },
+    "test_rag_integrity_hardening.py": {
+      "test_functions": 24,
+      "expanded_instances": 96
+    },
+    "test_rag_retriever.py": {
+      "test_functions": 2,
+      "expanded_instances": 2
+    },
+    "test_rag_tool.py": {
+      "test_functions": 3,
+      "expanded_instances": 3
+    },
+    "test_replanning_candidates.py": {
+      "test_functions": 7,
+      "expanded_instances": 15
+    },
+    "test_replanning_commit.py": {
+      "test_functions": 5,
+      "expanded_instances": 11
+    },
+    "test_replanning_correctness_hardening.py": {
+      "test_functions": 31,
+      "expanded_instances": 50
+    },
+    "test_replanning_evaluation.py": {
+      "test_functions": 1,
+      "expanded_instances": 50
+    },
+    "test_replanning_facts.py": {
+      "test_functions": 7,
+      "expanded_instances": 11
+    },
+    "test_replanning_llm_selection.py": {
+      "test_functions": 20,
+      "expanded_instances": 57
+    },
+    "test_replanning_preservation.py": {
+      "test_functions": 1,
+      "expanded_instances": 11
+    },
+    "test_replanning_scope.py": {
+      "test_functions": 4,
+      "expanded_instances": 28
+    },
+    "test_replanning_tool_efficiency.py": {
+      "test_functions": 1,
+      "expanded_instances": 4
+    },
+    "test_route_facts.py": {
+      "test_functions": 16,
+      "expanded_instances": 45
+    },
+    "test_route_hardening.py": {
+      "test_functions": 8,
+      "expanded_instances": 52
+    },
+    "test_route_workflow.py": {
+      "test_functions": 8,
+      "expanded_instances": 10
+    },
+    "test_services_trip.py": {
+      "test_functions": 8,
+      "expanded_instances": 8
+    },
+    "test_state_boundary_hardening.py": {
+      "test_functions": 8,
+      "expanded_instances": 36
+    },
+    "test_storage_service.py": {
+      "test_functions": 3,
+      "expanded_instances": 3
+    },
+    "test_tool_adapter.py": {
+      "test_functions": 10,
+      "expanded_instances": 56
+    },
+    "test_tool_contracts.py": {
+      "test_functions": 8,
+      "expanded_instances": 50
+    },
+    "test_tool_grounded_evaluation.py": {
+      "test_functions": 5,
+      "expanded_instances": 52
+    },
+    "test_trip_planner_agent.py": {
+      "test_functions": 8,
+      "expanded_instances": 8
+    }
+  }
+}

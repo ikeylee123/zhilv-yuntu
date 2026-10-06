@@ -1,0 +1,252 @@
+{
+  "schema_version": "e2e-v1",
+  "evaluation_time": "2026-10-06T00:00:00+00:00",
+  "scope": "Offline cross-layer integration, not live itinerary quality. Initial cases use HTTP generation and a replay LLM; replans use HTTP and temporary authoritative SQLite; route and RAG cases use service boundaries.",
+  "cases": [
+    {
+      "id": "initial_basic",
+      "category": "initial",
+      "expected_decision": "draft_created",
+      "expected_status": "valid",
+      "constraints": {},
+      "expected_findings": []
+    },
+    {
+      "id": "initial_budget",
+      "category": "initial",
+      "expected_decision": "draft_created",
+      "expected_status": "invalid",
+      "constraints": {
+        "budget_limit": 1
+      },
+      "expected_findings": [
+        "budget_exceeded"
+      ]
+    },
+    {
+      "id": "initial_must_visit",
+      "category": "initial",
+      "expected_decision": "draft_created",
+      "expected_status": "invalid",
+      "constraints": {
+        "must_visit": [
+          "颐和园"
+        ]
+      },
+      "expected_findings": [
+        "must_visit_missing"
+      ]
+    },
+    {
+      "id": "initial_avoid",
+      "category": "initial",
+      "expected_decision": "draft_created",
+      "expected_status": "invalid",
+      "constraints": {
+        "avoid": [
+          "故宫"
+        ]
+      },
+      "expected_findings": [
+        "avoided_attraction"
+      ]
+    },
+    {
+      "id": "initial_route_requested",
+      "category": "initial",
+      "expected_decision": "draft_created",
+      "expected_status": "unverifiable",
+      "constraints": {
+        "require_route_feasibility": true,
+        "transport_preference": "driving"
+      },
+      "expected_findings": [
+        "route_feasibility_unverifiable"
+      ]
+    },
+    {
+      "id": "route_enough_gap",
+      "category": "route",
+      "expected_decision": "valid",
+      "expected_status": "valid",
+      "expected_findings": []
+    },
+    {
+      "id": "route_insufficient_gap",
+      "category": "route",
+      "expected_decision": "invalid",
+      "expected_status": "invalid",
+      "duration": 2100,
+      "expected_findings": [
+        "route_time_violation"
+      ]
+    },
+    {
+      "id": "route_missing_evidence",
+      "category": "route",
+      "expected_decision": "unverifiable",
+      "expected_status": "unverifiable",
+      "timeout": true,
+      "expected_findings": [
+        "route_feasibility_unverifiable"
+      ]
+    },
+    {
+      "id": "route_unsupported_mode",
+      "category": "route",
+      "expected_decision": "unverifiable",
+      "expected_status": "unverifiable",
+      "transport": "walking",
+      "expected_findings": [
+        "route_feasibility_unverifiable"
+      ]
+    },
+    {
+      "id": "replan_replace",
+      "category": "replanning",
+      "expected_decision": "accepted",
+      "expected_status": "valid",
+      "operation": "replace",
+      "expected_findings": [],
+      "expected_reason": "ACCEPTED"
+    },
+    {
+      "id": "replan_remove",
+      "category": "replanning",
+      "expected_decision": "accepted",
+      "expected_status": "valid",
+      "operation": "remove",
+      "expected_findings": [],
+      "expected_reason": "ACCEPTED"
+    },
+    {
+      "id": "replan_add",
+      "category": "replanning",
+      "expected_decision": "accepted",
+      "expected_status": "valid",
+      "operation": "add",
+      "expected_findings": [],
+      "expected_reason": "ACCEPTED"
+    },
+    {
+      "id": "replan_modify_time_violation",
+      "category": "replanning",
+      "expected_decision": "rejected",
+      "expected_status": "invalid",
+      "operation": "modify_time",
+      "start_time": "10:05",
+      "end_time": "12:00",
+      "expected_findings": [
+        "route_time_violation"
+      ],
+      "expected_reason": "REPLAN_VALIDATION_FAILED"
+    },
+    {
+      "id": "replan_must_visit_removal",
+      "category": "replanning",
+      "expected_decision": "rejected",
+      "expected_status": null,
+      "operation": "remove",
+      "must_visit": [
+        "B"
+      ],
+      "expected_findings": [],
+      "expected_reason": "CONSTRAINT_CONFLICT"
+    },
+    {
+      "id": "replan_provider_timeout",
+      "category": "replanning",
+      "expected_decision": "unverifiable",
+      "expected_status": "unverifiable",
+      "operation": "replace",
+      "timeout": true,
+      "expected_findings": [
+        "route_feasibility_unverifiable"
+      ],
+      "expected_reason": "REPLAN_UNVERIFIABLE"
+    },
+    {
+      "id": "replan_grounding_conflict",
+      "category": "replanning",
+      "expected_decision": "rejected",
+      "expected_status": null,
+      "operation": "replace",
+      "grounding_conflict": true,
+      "expected_findings": [],
+      "expected_reason": "GROUNDING_CONFLICT"
+    },
+    {
+      "id": "selector_valid",
+      "category": "selector",
+      "expected_decision": "accepted",
+      "expected_status": "valid",
+      "operation": "replace",
+      "expected_findings": [],
+      "expected_reason": "ACCEPTED"
+    },
+    {
+      "id": "selector_hallucinated",
+      "category": "selector",
+      "expected_decision": "rejected",
+      "expected_status": null,
+      "operation": "replace",
+      "response": "{\"candidate_id\":\"invented\"}",
+      "expected_findings": [],
+      "expected_reason": "LLM_SELECTION_NOT_AUTHORIZED"
+    },
+    {
+      "id": "selector_injection_text",
+      "category": "selector",
+      "expected_decision": "accepted",
+      "expected_status": "valid",
+      "operation": "replace",
+      "injection": true,
+      "expected_findings": [],
+      "expected_reason": "ACCEPTED"
+    },
+    {
+      "id": "selector_version_race",
+      "category": "selector",
+      "expected_decision": "conflict",
+      "expected_status": null,
+      "operation": "replace",
+      "race": true,
+      "expected_findings": [],
+      "expected_reason": "VERSION_CONFLICT"
+    },
+    {
+      "id": "rag_exact",
+      "category": "knowledge",
+      "expected_decision": "success",
+      "expected_status": null,
+      "rag_case": "exact_lexical_01",
+      "expected_findings": []
+    },
+    {
+      "id": "rag_semantic_weakness",
+      "category": "knowledge",
+      "expected_decision": "no_data",
+      "expected_status": null,
+      "rag_case": "semantic_preference_01",
+      "expected_findings": []
+    },
+    {
+      "id": "rag_unsupported",
+      "category": "knowledge",
+      "expected_decision": "no_data",
+      "expected_status": null,
+      "query": "故宫",
+      "destination": "火星",
+      "expected_findings": []
+    },
+    {
+      "id": "rag_cache_provenance",
+      "category": "knowledge",
+      "expected_decision": "success",
+      "expected_status": null,
+      "rag_case": "exact_lexical_01",
+      "cache_probe": true,
+      "expected_findings": []
+    }
+  ]
+}
