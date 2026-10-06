@@ -7,6 +7,7 @@ docs/*
 !docs/phase3a-authoritative-state.md
 !docs/phase3b-deterministic-replanning.md
 !docs/phase3c-bounded-llm-selection.md
+!docs/phase3_5-rag-hardening.md
 
 # Environment files
 .env

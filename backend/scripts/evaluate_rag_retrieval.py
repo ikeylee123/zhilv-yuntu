@@ -14,7 +14,13 @@ if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
 from app.agents.tools.rag_tool import build_destination_query
-from app.rag.retriever import retrieve_travel_guide_chunks
+def retrieve_travel_guide_chunks(**kwargs):
+    # Evaluator uses typed usage directly; legacy Planner zero-fill stays at its adapter.
+    from app.models.knowledge_retrieval import KnowledgeQuery
+    from app.rag.knowledge_service import retrieve_knowledge, legacy_chunks
+    result = retrieve_knowledge(KnowledgeQuery(**kwargs))
+    return legacy_chunks(result), result.metadata.rerank_usage, result.metadata.embedding_usage
+
 
 
 DEFAULT_CASES_PATH = BACKEND_DIR / "eval" / "rag_eval_cases.json"
@@ -45,6 +51,7 @@ def _evaluate_case(case: dict[str, Any], known_destinations: set[str]) -> dict[s
     destination = str(case["destination"])
     if destination not in known_destinations:
         raise ValueError(f"Unknown evaluation destination: {destination}")
+    start_time = time.perf_counter()
     query, _ = build_destination_query(
         destination=destination,
         preferences=list(case.get("preferences", [])),
@@ -52,7 +59,6 @@ def _evaluate_case(case: dict[str, Any], known_destinations: set[str]) -> dict[s
         special_notes=case.get("special_notes"),
     )
 
-    start_time = time.perf_counter()
     chunks, rerank_usage, embedding_usage = retrieve_travel_guide_chunks(
         query=query, top_k=top_k, destination=destination
     )
@@ -101,9 +107,10 @@ def _evaluate_case(case: dict[str, Any], known_destinations: set[str]) -> dict[s
         "reciprocal_rank": reciprocal_rank,
         "pollution_count": pollution_count,
         "latency_ms": latency_ms,
-        "embedding_prompt_tokens": embedding_usage.get("prompt_tokens", 0),
-        "rerank_prompt_tokens": rerank_usage.get("prompt_tokens", 0),
+        "embedding_prompt_tokens": (embedding_usage or {}).get("prompt_tokens"),
+        "rerank_prompt_tokens": (rerank_usage or {}).get("prompt_tokens"),
         "titles": titles,
+        "returned_count": len(chunks),
     }
 
 
@@ -140,6 +147,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=DEFAULT_CASES_PATH,
         help="Path to the RAG eval cases JSON file.",
     )
+    parser.add_argument("--live", action="store_true", help="Explicitly enable real providers")
     return parser
 
 
@@ -147,7 +155,25 @@ def main() -> int:
     args = build_parser().parse_args()
     cases = _load_cases(args.cases)
     known_destinations = _collect_case_destinations(cases)
-    results = [_evaluate_case(case, known_destinations) for case in cases]
+    from contextlib import ExitStack
+    from unittest.mock import patch
+    from app.rag.knowledge_service import retrieve_knowledge, legacy_chunks
+    from app.models.knowledge_retrieval import KnowledgeQuery
+    from app.agents.tools.rag_tool import build_destination_rewrite
+    def offline_query(**kwargs):
+        rewrite = build_destination_rewrite(**kwargs, offline=True)
+        return rewrite.effective_query, rewrite.usage
+    def offline_chunks(**kwargs):
+        result = retrieve_knowledge(KnowledgeQuery(**kwargs), mode="keyword_baseline")
+        return legacy_chunks(result), result.metadata.rerank_usage, result.metadata.embedding_usage
+    with ExitStack() as stack:
+        if not args.live:
+            stack.enter_context(patch(__name__ + ".build_destination_query", offline_query))
+            stack.enter_context(patch(__name__ + ".retrieve_travel_guide_chunks", offline_chunks))
+            stack.enter_context(patch("app.rag.knowledge_service.get_cached_json", return_value=None))
+            stack.enter_context(patch("app.rag.knowledge_service.set_cached_json", return_value=False))
+        results = [_evaluate_case(case, known_destinations) for case in cases]
+    print("mode: " + ("live" if args.live else "offline keyword/rule legacy regression"))
 
     for result in results:
         _print_case_result(result)
@@ -160,22 +186,26 @@ def main() -> int:
     total_required_keywords = sum(
         int(result["required_keyword_total"]) for result in results
     )
-    mrr = sum(result["reciprocal_rank"] for result in results) / total
-    noise_rate = total_noise / (total * int(cases[0].get("top_k", 5))) * 100
+    mrr = sum(result["reciprocal_rank"] for result in results) / max(total, 1)
+    noise_rate = total_noise / max(sum(r["returned_count"] for r in results), 1) * 100
     total_pollution = sum(int(result["pollution_count"]) for result in results)
-    avg_latency = sum(result["latency_ms"] for result in results) / total
+    avg_latency = sum(result["latency_ms"] for result in results) / max(total, 1)
     total_embedding_prompt_tokens = sum(
-        int(result["embedding_prompt_tokens"]) for result in results
+        int(result["embedding_prompt_tokens"] or 0) for result in results
     )
     total_rerank_prompt_tokens = sum(
-        int(result["rerank_prompt_tokens"]) for result in results
+        int(result["rerank_prompt_tokens"] or 0) for result in results
     )
 
+    if any(r["embedding_prompt_tokens"] is None for r in results):
+        total_embedding_prompt_tokens = None
+    if any(r["rerank_prompt_tokens"] is None for r in results):
+        total_rerank_prompt_tokens = None
     print("=== Summary ===")
     print(f"cases: {total}")
     print(f"destinations: {'、'.join(sorted(known_destinations))}")
-    print(f"top1_title_hit_rate: {top1_hits}/{total} ({top1_hits/total*100:.1f}%)")
-    print(f"topk_title_hit_rate: {topk_hits}/{total} ({topk_hits/total*100:.1f}%)")
+    print(f"top1_title_hit_rate: {top1_hits}/{total} ({top1_hits/max(total,1)*100:.1f}%)")
+    print(f"topk_title_hit_rate: {topk_hits}/{total} ({topk_hits/max(total,1)*100:.1f}%)")
     print(f"required_keyword_coverage: {total_required_hits}/{total_required_keywords}")
     print(f"MRR: {mrr:.3f}")
     print(f"noise_count_total: {total_noise}")

@@ -48,6 +48,8 @@ def test_chroma_search_filters_by_destination_metadata(monkeypatch) -> None:
         def query(self, **kwargs):
             captured.update(kwargs)
             return {
+                "ids": [["corpus-chunk-id"]],
+                "distances": [[0.1]],
                 "documents": [["# 故宫\n明清皇家宫殿建筑群。"]],
                 "metadatas": [[
                     {

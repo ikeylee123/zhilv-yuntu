@@ -11,6 +11,7 @@ from app.config import (
     LLM_TIMEOUT_SECONDS,
 )
 from app.rag.retriever import retrieve_travel_guide
+from app.rag.telemetry import legacy_usage, observe_result, parse_usage
 
 
 logger = logging.getLogger(__name__)
@@ -28,19 +29,26 @@ def _append_unique(parts: list[str], value: str) -> None:
 
 
 @lru_cache(maxsize=1)
-def _load_retrieval_rules() -> dict:
-    """读取版本化检索规则；配置损坏时保持空规则，避免阻断主链路。"""
+def _parse_retrieval_rules(raw_text: str) -> dict:
     try:
-        raw_data = json.loads(RETRIEVAL_RULES_PATH.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        logger.warning("Unable to load retrieval rules from %s: %s", RETRIEVAL_RULES_PATH, exc)
+        value = json.loads(raw_text)
+    except json.JSONDecodeError:
+        logger.warning("Invalid retrieval rules JSON")
+        return {"global_rules": [], "destinations": {}}
+    return value if isinstance(value, dict) else {"global_rules": [], "destinations": {}}
+
+
+def _load_retrieval_rules() -> dict:
+    """Cache by file content, so changed rules and their version stay aligned."""
+    try:
+        return _parse_retrieval_rules(RETRIEVAL_RULES_PATH.read_text(encoding="utf-8"))
+    except OSError:
+        logger.warning("Retrieval rules unavailable")
         return {"global_rules": [], "destinations": {}}
 
-    if not isinstance(raw_data, dict):
-        logger.warning("Retrieval rules must be a JSON object: %s", RETRIEVAL_RULES_PATH)
-        return {"global_rules": [], "destinations": {}}
 
-    return raw_data
+# Preserve the existing cache-reset seam for legacy callers/tests.
+_load_retrieval_rules.cache_clear = _parse_retrieval_rules.cache_clear
 
 
 def _valid_rules(value: object) -> list[dict[str, list[str]]]:
@@ -118,13 +126,8 @@ def _build_chat_llm():
 
 def _extract_token_usage(response) -> dict[str, int]:
     """从 LangChain AIMessage 中提取 token 使用量。"""
-    usage = {"prompt_tokens": 0, "completion_tokens": 0}
-    metadata = getattr(response, "response_metadata", None) or {}
-    token_usage = metadata.get("token_usage", {})
-    if token_usage:
-        usage["prompt_tokens"] = token_usage.get("prompt_tokens", 0)
-        usage["completion_tokens"] = token_usage.get("completion_tokens", 0)
-    return usage
+    metadata = getattr(response, "response_metadata", None)
+    return parse_usage(metadata.get("token_usage") if isinstance(metadata, dict) else None)
 
 
 def llm_rewrite_query(
@@ -135,7 +138,10 @@ def llm_rewrite_query(
 ) -> tuple[str | None, dict[str, int]]:
     """用 LLM 把用户旅行需求改写成适合向量检索的 query。返回 (query, token_usage)。"""
     empty_usage = {"prompt_tokens": 0, "completion_tokens": 0}
-    llm = _build_chat_llm()
+    try:
+        llm = _build_chat_llm()
+    except Exception:
+        return None, empty_usage
     if llm is None:
         return None, empty_usage
 
@@ -172,10 +178,10 @@ def llm_rewrite_query(
             )
         query = raw_text.strip()
         if query:
-            logger.info("llm_rewrite_query: input=%s -> output=%s", human_prompt, query)
+            logger.info("llm_rewrite_query completed")
             return query, token_usage
     except Exception:
-        logger.warning("llm_rewrite_query failed, falling back to rule-based", exc_info=True)
+        logger.warning("llm_rewrite_query failed, falling back to rule-based")
 
     return None, empty_usage
 
@@ -187,7 +193,11 @@ def _rule_based_query(
     special_notes: str | None = None,
 ) -> str:
     """规则级 Query Rewrite，作为 LLM Rewrite 的 fallback。"""
+    from app.rag.guide_catalog import canonical_destination
+    destination = canonical_destination(destination)
     parts: list[str] = [destination]
+    if special_notes:
+        _append_unique(parts, special_notes[:1024])
 
     if preferences:
         for preference in preferences:
@@ -202,7 +212,7 @@ def _rule_based_query(
     for stable_term in ["景点", "行程", "攻略", "推荐", "餐饮", "住宿"]:
         _append_unique(parts, stable_term)
 
-    return " ".join(part for part in parts if part).strip()
+    return " ".join(part for part in parts if part).strip()[:2048]
 
 
 def build_destination_query(
@@ -212,22 +222,25 @@ def build_destination_query(
     special_notes: str | None = None,
 ) -> tuple[str, dict[str, int]]:
     """把目的地、偏好、节奏和备注改写成更贴近检索场景的 query。返回 (query, token_usage)。"""
-    llm_query, token_usage = llm_rewrite_query(
-        destination=destination,
-        preferences=preferences,
-        pace=pace,
-        special_notes=special_notes,
-    )
-    if llm_query:
-        return llm_query, token_usage
+    result = build_destination_rewrite(destination, preferences, pace, special_notes)
+    return result.effective_query, legacy_usage(result.usage)
 
-    logger.info("build_destination_query: LLM rewrite unavailable, using rule-based")
-    return _rule_based_query(
-        destination=destination,
-        preferences=preferences,
-        pace=pace,
-        special_notes=special_notes,
-    ), {"prompt_tokens": 0, "completion_tokens": 0}
+
+def build_destination_rewrite(destination, preferences=None, pace=None, special_notes=None, *, offline=False):
+    from app.rag.rewrite import rewrite_query
+    from app.rag.guide_catalog import canonical_destination
+    destination = canonical_destination(destination)
+    original = " ".join([destination, *(preferences or []), pace or "", special_notes or ""]).strip()
+    if len(original) > 2048:
+        raise ValueError("Query exceeds 2048 characters")
+    def provider():
+        if offline:
+            return _rule_based_query(destination, preferences, pace, special_notes), None
+        candidate, usage = llm_rewrite_query(destination, preferences, pace, special_notes)
+        return candidate, usage
+    return rewrite_query(original, destination,
+        preferences=[*_extract_note_keywords(special_notes, destination), "景点", "行程", "攻略", "推荐", "餐饮", "住宿"],
+        provider=provider)
 
 
 def _build_destination_query(
@@ -253,29 +266,32 @@ def get_destination_guide_context(
     top_k: int = 5,
 ) -> tuple[list[str], dict[str, int], dict[str, int], dict[str, int]]:
     """根据目的地和偏好返回本地攻略片段。返回 (contexts, rewrite_usage, rerank_usage, embedding_usage)。"""
-    query, rewrite_usage = build_destination_query(
-        destination=destination,
-        preferences=preferences,
-        pace=pace,
-        special_notes=special_notes,
-    )
-    contexts, rerank_usage, embedding_usage = retrieve_travel_guide(
-        query=query, top_k=top_k, destination=destination
-    )
-
-    # 补充检索住宿和餐饮 chunk，确保 LLM 能获取真实商户名
-    existing_set = set(contexts)
-    for supplement_query in [f"{destination} 住宿 酒店 民宿", f"{destination} 餐饮 美食 餐厅"]:
-        extra_contexts, extra_rerank, extra_embed = retrieve_travel_guide(
-            query=supplement_query, top_k=2, destination=destination
-        )
-        for ctx in extra_contexts:
-            if ctx not in existing_set:
-                contexts.append(ctx)
-                existing_set.add(ctx)
-        rerank_usage["prompt_tokens"] += extra_rerank.get("prompt_tokens", 0)
-        rerank_usage["completion_tokens"] += extra_rerank.get("completion_tokens", 0)
-        embedding_usage["prompt_tokens"] += extra_embed.get("prompt_tokens", 0)
-        embedding_usage["completion_tokens"] += extra_embed.get("completion_tokens", 0)
-
-    return contexts, rewrite_usage, rerank_usage, embedding_usage
+    from app.models.knowledge_retrieval import KnowledgeQuery
+    from app.rag.knowledge_service import retrieve_knowledge, format_context, MAX_TOTAL_CONTEXT
+    rewrite = build_destination_rewrite(destination, preferences, pace, special_notes)
+    result = retrieve_knowledge(KnowledgeQuery(query=rewrite.original_query, destination=destination, top_k=top_k), rewrite=rewrite)
+    contexts = format_context(result)
+    observe_result(result)
+    rerank_usage = legacy_usage(result.metadata.rerank_usage)
+    embedding_usage = legacy_usage(result.metadata.embedding_usage)
+    seen = {c.chunk_id for c in result.chunks}
+    for query in [f"{destination} 住宿 酒店 民宿", f"{destination} 餐饮 美食 餐厅"]:
+        extra = retrieve_knowledge(KnowledgeQuery(query=query, destination=destination, top_k=2))
+        observe_result(extra)
+        fresh = tuple(c for c in extra.chunks if c.chunk_id not in seen)
+        seen.update(c.chunk_id for c in fresh)
+        contexts.extend(format_context(extra.model_copy(update={"chunks": fresh})))
+        for target, usage in [(rerank_usage, extra.metadata.rerank_usage), (embedding_usage, extra.metadata.embedding_usage)]:
+            if usage is None or not target.get("usage_known"):
+                target.clear()
+                target["usage_known"] = False
+            else:
+                for key, value in usage.items():
+                    target[key] = target.get(key, 0) + value
+    bounded, remaining = [], MAX_TOTAL_CONTEXT
+    for context in contexts:
+        if remaining <= 0:
+            break
+        bounded.append(context[:remaining])
+        remaining -= len(bounded[-1])
+    return bounded, legacy_usage(rewrite.usage), rerank_usage, embedding_usage

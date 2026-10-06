@@ -1,13 +1,13 @@
 from __future__ import annotations
 
 import re
-from hashlib import md5
+import math
+import json
 
 import httpx
 
 from app.config import (
     BACKEND_DIR,
-    CHROMA_COLLECTION_NAME,
     CHROMA_DB_DIR,
     EMBEDDING_BATCH_SIZE,
     EMBEDDING_MODEL,
@@ -20,73 +20,59 @@ from app.rag.guide_catalog import destination_for_guide
 DATA_DIR = BACKEND_DIR / "data"
 
 
-def _split_markdown_into_chunks(markdown_text: str, source_name: str) -> list[dict[str, str]]:
-    """按二级、三级标题切分 Markdown，返回可检索片段。"""
-    chunks: list[dict[str, str]] = []
-    current_title = "文档开头"
-    current_lines: list[str] = []
-
+def _split_markdown_into_chunks(markdown_text: str, source_name: str) -> list[dict]:
+    from app.rag.versions import CHUNKING_POLICY
+    chunks, lines, headings = [], [], []
+    parent = None
+    def flush():
+        text = "\n".join(lines).strip()
+        title = headings[-1] if headings else "文档开头"
+        for offset in range(0, len(text), CHUNKING_POLICY["max_chars"]):
+            body = text[offset:offset + CHUNKING_POLICY["max_chars"]].strip()
+            if body:
+                chunks.append({"title": title, "text": body, "source": source_name,
+                               "heading_path": list(headings) or [title]})
+        lines.clear()
     for line in markdown_text.splitlines():
         stripped = line.strip()
-        if stripped.startswith("## ") or stripped.startswith("### "):
-            if current_lines:
-                chunks.append(
-                    {
-                        "title": current_title,
-                        "text": "\n".join(current_lines).strip(),
-                        "source": source_name,
-                    }
-                )
-                current_lines = []
-            current_title = stripped.lstrip("#").strip()
+        match = re.match(r"^(#{2,3})\s+(.+)$", stripped)
+        if match:
+            flush()
+            if len(match[1]) == 2:
+                parent = match[2]
+                headings[:] = [parent]
+            else:
+                headings[:] = ([parent] if parent else []) + [match[2]]
         elif stripped:
-            current_lines.append(stripped)
-
-    if current_lines:
-        chunks.append(
-            {
-                "title": current_title,
-                "text": "\n".join(current_lines).strip(),
-                "source": source_name,
-            }
-        )
-
+            lines.append(stripped)
+    flush()
     return chunks
 
 
 def _build_chunk_id(source: str, title: str, text: str) -> str:
-    """基于 source、title 和 text 生成稳定片段 ID。"""
-    digest = md5(f"{source}|{title}|{text}".encode("utf-8")).hexdigest()
-    return f"{source}_{digest}"
+    from app.rag.versions import stable_hash
+    return "chunk_" + stable_hash([source, title, text.strip()])
 
 
-def _build_document_text(chunk: dict[str, str]) -> str:
-    """把标题和正文拼成送入向量库的文档文本。"""
+def _build_document_text(chunk: dict) -> str:
     return f"{chunk['title']}\n{chunk['text']}"
 
 
-def load_guide_chunks() -> list[dict[str, str]]:
-    """读取 backend/data 下的攻略文件，并切分成可检索片段。"""
-    chunks: list[dict[str, str]] = []
+def load_guide_chunks() -> list[dict]:
+    from app.rag.versions import stable_hash
+    import hashlib
+    chunks = []
     for guide_file in sorted(DATA_DIR.glob("*.md*")):
         destination = destination_for_guide(guide_file.name)
         if destination is None:
-            raise ValueError(
-                f"攻略文件缺少 destination 映射：{guide_file.name}。"
-                "请先在 app/rag/guide_catalog.py 中登记该文件。"
-            )
-        text = guide_file.read_text(encoding="utf-8")
-        raw_chunks = _split_markdown_into_chunks(text, guide_file.name)
-        for chunk in raw_chunks:
-            chunks.append(
-                {
-                    "id": _build_chunk_id(chunk["source"], chunk["title"], chunk["text"]),
-                    "title": chunk["title"],
-                    "text": chunk["text"],
-                    "source": chunk["source"],
-                    "destination": destination,
-                }
-            )
+            raise ValueError("Unregistered corpus source: " + guide_file.name)
+        for chunk in _split_markdown_into_chunks(guide_file.read_text(encoding="utf-8"), guide_file.name):
+            path = "data/" + guide_file.name
+            chunk.update(source_path=path, source_id="source_" + stable_hash(path),
+                         destination=destination, knowledge_kind="static_knowledge",
+                         content_hash=hashlib.sha256(chunk["text"].encode()).hexdigest())
+            chunk["id"] = _build_chunk_id(path, "/".join(chunk["heading_path"]), chunk["text"])
+            chunks.append(chunk)
     return chunks
 
 
@@ -102,12 +88,20 @@ def _score_chunk(query: str, chunk_text: str) -> int:
     return sum(1 for keyword in keywords if keyword in chunk_text)
 
 
+def _validate_candidate_query(top_k, destination):
+    from app.rag.guide_catalog import canonical_destination
+    if type(top_k) is not int or not 1 <= top_k <= 20:
+        raise ValueError("Candidate count must be a strict integer in 1..20")
+    return canonical_destination(destination) if destination else None
+
+
 def _search_guide_chunks_by_keywords(
-    query: str, top_k: int = 3, destination: str | None = None
+    query: str, top_k: int = 3, destination: str | None = None, *, chunks=None
 ) -> list[dict[str, str]]:
     """回退方案：使用关键词匹配本地攻略片段。"""
+    destination = _validate_candidate_query(top_k, destination)
     scored_chunks: list[tuple[int, dict[str, str]]] = []
-    for chunk in load_guide_chunks():
+    for chunk in (load_guide_chunks() if chunks is None else chunks):
         if destination and chunk.get("destination") != destination:
             continue
         score = _score_chunk(query, _build_document_text(chunk))
@@ -146,26 +140,21 @@ def _build_embeddings():
         )
 
 
-def _extract_embedding_token_usage(response_data: dict) -> dict[str, int]:
-    """读取 embeddings 接口返回的官方 usage；没有 usage 时保持 0。"""
-    usage = response_data.get("usage") or {}
-    prompt_tokens = (
-        usage.get("prompt_tokens")
-        or usage.get("input_tokens")
-        or usage.get("input_token_count")
-        or usage.get("total_tokens")
-        or usage.get("total_token_count")
-        or 0
-    )
-    return {
-        "prompt_tokens": int(prompt_tokens),
-        "completion_tokens": 0,
-    }
+def _extract_embedding_token_usage(response_data: dict) -> dict[str, int] | None:
+    """Only official counts are known; absent/malformed telemetry stays null."""
+    from app.rag.telemetry import parse_usage
+    usage = parse_usage(response_data.get("usage"))
+    if usage is None:
+        return None
+    for key in ("prompt_tokens", "input_tokens", "input_token_count", "total_tokens", "total_token_count"):
+        if key in usage:
+            return {"prompt_tokens": usage[key], "completion_tokens": 0}
+    return None
 
 
 def _embed_query_with_usage(query: str) -> tuple[list[float] | None, dict[str, int]]:
-    """在线 query embedding：优先直接调接口拿官方 usage，失败时回退 LangChain 但 usage 为 0。"""
-    empty_usage = {"prompt_tokens": 0, "completion_tokens": 0}
+    """在线 query embedding：优先直接调接口拿官方 usage，失败时回退 LangChain；未知 usage 为 null。"""
+    empty_usage = None
     if not LLM_API_KEY:
         return None, empty_usage
 
@@ -190,17 +179,17 @@ def _embed_query_with_usage(query: str) -> tuple[list[float] | None, dict[str, i
                 usage = _extract_embedding_token_usage(data)
                 print(
                     "[embedding] query embedding token: "
-                    f"prompt={usage['prompt_tokens']}, completion=0, source=api"
+                    f"usage_known={usage is not None}, source=api"
                 )
                 return items[0]["embedding"], usage
-            print(f"[embedding] embeddings response missing vector: {response.text[:500]}")
+            print(f"[embedding] embeddings response missing vector: [redacted]")
         else:
             print(
                 "[embedding] embeddings API failed: "
-                f"status_code={response.status_code}, response={response.text[:500]}"
+                f"status_code={response.status_code}, response=[redacted]"
             )
     except Exception as exc:
-        print(f"[embedding] embeddings API failed: {type(exc).__name__}: {exc}")
+        print(f"[embedding] embeddings API failed: {type(exc).__name__}")
 
     embeddings = _build_embeddings()
     if embeddings is None:
@@ -210,79 +199,44 @@ def _embed_query_with_usage(query: str) -> tuple[list[float] | None, dict[str, i
 
 
 def _get_chroma_collection():
-    """获取 Chroma collection。"""
-    try:
-        import chromadb
-    except ImportError:
-        return None
-
-    client = chromadb.PersistentClient(path=str(CHROMA_DB_DIR))
-    return client.get_or_create_collection(
-        name=CHROMA_COLLECTION_NAME,
-        metadata={"hnsw:space": "cosine"},
-    )
+    """Only open a verified, published index. Never create a collection on reads."""
+    from app.rag.index_store import open_active_index
+    return open_active_index()
 
 
 def ingest_guide_chunks_to_chroma() -> int:
-    """
-    把本地攻略片段写入 Chroma。
-
-    流程是：
-    1. 创建 embedding 模型
-    2. 获取 Chroma collection
-    3. 读取并切分本地攻略
-    4. 生成向量
-    5. 把向量、文本和 metadata 一起写入 Chroma
-    """
-    embeddings = _build_embeddings()
-    collection = _get_chroma_collection()
-    chunks = load_guide_chunks()
-
-    if embeddings is None:
-        raise RuntimeError("当前环境缺少 embedding 能力，无法写入 Chroma。")
-    if collection is None:
-        raise RuntimeError("当前环境缺少 chromadb，无法写入 Chroma。")
-
-    documents = [_build_document_text(chunk) for chunk in chunks]
-    vectors = embeddings.embed_documents(documents)
-    ids = [chunk["id"] for chunk in chunks]
-    metadatas = [
-        {
-            "title": chunk["title"],
-            "source": chunk["source"],
-            "destination": chunk["destination"],
-        }
-        for chunk in chunks
-    ]
-
-    collection.upsert(
-        ids=ids,
-        documents=documents,
-        metadatas=metadatas,
-        embeddings=vectors,
-    )
-    return len(chunks)
+    from app.rag.index_store import rebuild_index
+    return rebuild_index()
 
 
 def _search_guide_chunks_by_chroma(
     query: str, top_k: int = 3, destination: str | None = None
 ) -> tuple[list[dict[str, str]], dict[str, int]]:
     """优先使用 Chroma 做向量检索，并返回在线 query embedding token。"""
+    destination = _validate_candidate_query(top_k, destination)
     collection = _get_chroma_collection()
-    empty_usage = {"prompt_tokens": 0, "completion_tokens": 0}
+    empty_usage = None
 
     if collection is None:
         return [], empty_usage
     if collection.count() == 0:
         return [], empty_usage
 
-    query_embedding, embedding_usage = _embed_query_with_usage(query)
+    try:
+        query_embedding, embedding_usage = _embed_query_with_usage(query)
+    except Exception as exc:
+        from app.rag.knowledge_service import EmbeddingFailed
+        raise EmbeddingFailed("Query embedding failed") from exc
     if query_embedding is None:
-        return [], empty_usage
+        from app.rag.knowledge_service import EmbeddingFailed
+        raise EmbeddingFailed("Query embedding unavailable")
+    if not isinstance(query_embedding, list) or not query_embedding or any(type(v) not in (int, float) or not math.isfinite(v) for v in query_embedding):
+        from app.rag.knowledge_service import EmbeddingFailed
+        raise EmbeddingFailed("Invalid embedding vector")
     query_args = {
         "query_embeddings": [query_embedding],
-        "n_results": top_k,
-        "include": ["documents", "metadatas"],
+        "n_results": min(top_k, collection.count()),
+        "include": ["documents", "metadatas", "distances"],
     }
     if destination:
         query_args["where"] = {"destination": destination}
@@ -291,14 +245,25 @@ def _search_guide_chunks_by_chroma(
     documents = result.get("documents", [[]])[0]
     metadatas = result.get("metadatas", [[]])[0]
 
+    ids = result.get("ids", [[]])[0]
+    distances = result.get("distances", [[]])[0]
+    if not len(documents) == len(metadatas) == len(ids) == len(distances):
+        from app.rag.knowledge_service import InvalidRetrievalResponse
+        raise InvalidRetrievalResponse("Inconsistent vector response")
     matched_chunks: list[dict[str, str]] = []
-    for document, metadata in zip(documents, metadatas):
+    for position, (document, metadata) in enumerate(zip(documents, metadatas)):
         title = metadata.get("title", "未命名片段") if metadata else "未命名片段"
         source = metadata.get("source", "未知来源") if metadata else "未知来源"
         chunk_destination = metadata.get("destination", "") if metadata else ""
         text = document.split("\n", 1)[1] if "\n" in document else document
         matched_chunks.append(
             {
+                "id": ids[position],
+                "source_path": metadata.get("source_path", "data/" + source),
+                "source_id": metadata.get("source_id", ""),
+                "heading_path": json.loads(metadata.get("heading_path", "null")) or [title],
+                "content_hash": metadata.get("content_hash", ""),
+                "vector_distance": result["distances"][0][position] if result.get("distances") else None,
                 "title": title,
                 "text": text,
                 "source": source,
@@ -317,15 +282,16 @@ def search_guide_chunks_with_usage(
 
     优先走 Chroma 向量检索；如果当前环境还没准备好，再回退到关键词检索。
     """
-    empty_usage = {"prompt_tokens": 0, "completion_tokens": 0}
-    chroma_results, embedding_usage = _search_guide_chunks_by_chroma(
-        query=query, top_k=top_k, destination=destination
-    )
-    if chroma_results:
-        return chroma_results, embedding_usage
-    return _search_guide_chunks_by_keywords(
-        query=query, top_k=top_k, destination=destination
-    ), empty_usage
+    destination = _validate_candidate_query(top_k, destination)
+    embedding_usage = None
+    try:
+        chroma_results, embedding_usage = _search_guide_chunks_by_chroma(query, top_k, destination)
+        if chroma_results:
+            return chroma_results, embedding_usage
+    except Exception:
+        import logging
+        logging.getLogger(__name__).warning("legacy vector retrieval degraded to keyword fallback")
+    return _search_guide_chunks_by_keywords(query, top_k, destination), embedding_usage
 
 
 def search_guide_chunks(

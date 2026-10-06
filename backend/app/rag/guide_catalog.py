@@ -19,3 +19,12 @@ def destination_for_guide(source_name: str) -> str | None:
 def known_destinations() -> set[str]:
     """返回当前攻略目录中已维护的全部目的地。"""
     return set(GUIDE_DESTINATIONS.values())
+
+
+def canonical_destination(value: str) -> str:
+    """Minimal corpus registry aliases; unknown cities remain explicitly unsupported."""
+    value = value.strip()
+    aliases = dict(zip(("beijing", "chengdu", "dali", "sanya", "xiamen", "xian", "xi'an"),
+                       ("北京", "成都", "大理", "三亚", "厦门", "西安", "西安")))
+    value = aliases.get(value.casefold(), value)
+    return value[:-1] if value.endswith("市") and value[:-1] in known_destinations() else value

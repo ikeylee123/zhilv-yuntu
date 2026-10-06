@@ -9,7 +9,8 @@ BACKEND_DIR = CURRENT_FILE.parent.parent
 if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
-from app.config import CHROMA_COLLECTION_NAME, CHROMA_DB_DIR, EMBEDDING_MODEL
+from app.config import CHROMA_DB_DIR, EMBEDDING_MODEL
+from app.rag.versions import index_version
 from app.rag.vector_db import ingest_guide_chunks_to_chroma, load_guide_chunks
 
 
@@ -19,7 +20,8 @@ def main() -> int:
     print(f"chunk_count: {len(chunks)}")
     print(f"embedding_model: {EMBEDDING_MODEL}")
     print(f"chroma_db_dir: {CHROMA_DB_DIR}")
-    print(f"collection_name: {CHROMA_COLLECTION_NAME}")
+    print(f"index_version: {index_version()}")
+    print("collection_policy: rag_<24-char-index-prefix>_<8-char-build-suffix>; verified atomic publication")
     print()
 
     written_count = ingest_guide_chunks_to_chroma()
