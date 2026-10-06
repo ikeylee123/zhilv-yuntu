@@ -8,6 +8,7 @@ from app.models.planning_facts import FactSource
 from app.services import planning_fact_service as service, map_service
 from app.services.route_validation import query_identity, discover_pairs
 from route_fixtures import state, trusted, NOW
+from app.models.tool_contracts import ToolResult, DrivingRouteData, ToolMetadata, build_tool_query_key, source_for
 
 REAL_FETCH_IDENTITY = map_service.fetch_place_identity
 
@@ -100,13 +101,14 @@ def test_identical_queries_are_deduplicated_but_bound_to_distinct_pairs(monkeypa
 @pytest.mark.parametrize("cache_case", ["fresh", "stale", "no_timestamp", "wrong_query", "future", "legacy"])
 def test_versioned_cache_provenance(monkeypatch, cache_case):
     s = state(); pair = discover_pairs(s.current_itinerary)[0][0]
-    query = query_identity(pair.origin.coordinates, pair.destination.coordinates)
-    source = FactSource(fetched_at=NOW-timedelta(seconds=60)).model_dump(mode="json")
-    cached = dict(query_id=query, source=source, distance_meters=100, duration_seconds=60)
-    if cache_case == "stale": source["fetched_at"] = (NOW-timedelta(seconds=901)).isoformat()
-    if cache_case == "no_timestamp": source["fetched_at"] = None
-    if cache_case == "wrong_query": cached["query_id"] = "another-direction"
-    if cache_case == "future": source["fetched_at"] = (NOW+timedelta(seconds=1)).isoformat()
+    arguments = dict(origin=pair.origin.coordinates.model_dump(), destination=pair.destination.coordinates.model_dump())
+    cached = ToolResult[DrivingRouteData](status="success", source=source_for("get_driving_route"),
+        fetched_at=NOW-timedelta(seconds=60), data=DrivingRouteData(**arguments, distance_meters=100, duration_seconds=60),
+        metadata=ToolMetadata(request_id="cache-test", query_hash=build_tool_query_key("get_driving_route", arguments))).model_dump(mode="json")
+    if cache_case == "stale": cached["fetched_at"] = (NOW-timedelta(seconds=901)).isoformat()
+    if cache_case == "no_timestamp": cached["fetched_at"] = None
+    if cache_case == "wrong_query": cached["metadata"]["query_hash"] = "0" * 64
+    if cache_case == "future": cached["fetched_at"] = (NOW+timedelta(seconds=1)).isoformat()
     if cache_case == "legacy": cached = {"distance_km": 1, "estimated_minutes": 0}
     keys, writes, calls = [], [], []
     monkeypatch.setattr(service, "get_cached_json", lambda key: keys.append(key) or cached)
@@ -114,7 +116,7 @@ def test_versioned_cache_provenance(monkeypatch, cache_case):
     monkeypatch.setattr(map_service, "fetch_driving_route_fact", lambda *args: calls.append(1) or
                         {"distance_meters": 200, "duration_seconds": 120})
     snapshot = collect(s)
-    assert keys[0].startswith("planning:route:v1:")
+    assert keys[0].startswith("tools:v1:")
     if cache_case == "fresh":
         assert not calls and not writes and snapshot.metrics.cache_hits == 1
         assert snapshot.route_facts[0].source.fetched_at == NOW-timedelta(seconds=60)
@@ -126,9 +128,10 @@ def test_versioned_cache_provenance(monkeypatch, cache_case):
 
 def test_stale_cache_refresh_failure_retains_stale_not_known(monkeypatch):
     s = state(); pair = discover_pairs(s.current_itinerary)[0][0]
-    cached = dict(query_id=query_identity(pair.origin.coordinates, pair.destination.coordinates),
-                  source=FactSource(fetched_at=NOW-timedelta(hours=1)).model_dump(mode="json"),
-                  distance_meters=100, duration_seconds=60)
+    arguments = dict(origin=pair.origin.coordinates.model_dump(), destination=pair.destination.coordinates.model_dump())
+    cached = ToolResult[DrivingRouteData](status="success", source=source_for("get_driving_route"),
+        fetched_at=NOW-timedelta(hours=1), data=DrivingRouteData(**arguments, distance_meters=100, duration_seconds=60),
+        metadata=ToolMetadata(request_id="stale-test", query_hash=build_tool_query_key("get_driving_route", arguments))).model_dump(mode="json")
     monkeypatch.setattr(service, "get_cached_json", lambda key: cached)
     def fail(*args): raise httpx.ReadTimeout("offline")
     monkeypatch.setattr(map_service, "fetch_driving_route_fact", fail)

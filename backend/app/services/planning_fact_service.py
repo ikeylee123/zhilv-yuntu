@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
-from hashlib import sha256
 from uuid import uuid4
 import httpx
 from pydantic import Field, ValidationError, field_validator
@@ -15,6 +14,8 @@ from app.models.planning_facts import (
 from app.services import map_service
 from app.services.cache_service import get_cached_json, set_cached_json
 from app.services.route_validation import discover_pairs, plan_fingerprint, query_identity, source_freshness
+from app.services.tool_adapter import DirectToolProvider
+from app.models.tool_contracts import ToolStatus, validate_result
 
 
 class CachedRoute(FrozenModel):
@@ -39,6 +40,14 @@ def failure(exc):
     return OutcomeStatus.PROVIDER_ERROR, "provider_error"
 
 
+def tool_failure(result):
+    # Preserve Phase 2 finding vocabulary; richer machine reasons remain in ToolResult.
+    mapping = {"timeout": OutcomeStatus.TIMEOUT, "no_data": OutcomeStatus.NO_DATA,
+               "invalid_response": OutcomeStatus.INVALID_RESPONSE, "unsupported": OutcomeStatus.UNSUPPORTED}
+    status = mapping.get(result.status.value, OutcomeStatus.PROVIDER_ERROR)
+    return status, status.value
+
+
 def _same_place(activity, place):
     try:
         return (place is not None and place.get("poi_id") == activity.entity_id
@@ -48,7 +57,7 @@ def _same_place(activity, place):
         return False
 
 
-def collect_route_facts(plan, constraints, *, trusted_pois=None, allow_identity_lookup=True, now=None):
+def collect_route_facts(plan, constraints, *, trusted_pois=None, allow_identity_lookup=True, now=None, tool_provider=None):
     """trusted_pois is an internal candidate-pool argument, never an HTTP field.
 
     Local name-based enrichment is not binding evidence. Edit/save may rebind an
@@ -58,6 +67,7 @@ def collect_route_facts(plan, constraints, *, trusted_pois=None, allow_identity_
     clock = (lambda: now) if now is not None else (lambda: datetime.now(timezone.utc))
     if clock().tzinfo is None or clock().utcoffset() is None:
         raise ValueError("Collection time must be timezone aware")
+    tool_provider = tool_provider or DirectToolProvider(cache_get=get_cached_json, cache_set=set_cached_json, clock=clock)
     route_facts, outcomes = [], []
     counts = dict(logical_route_queries=0, cache_hits=0, actual_provider_calls=0,
                   deduplicated_calls=0, unnecessary_calls=0, identity_provider_calls=0)
@@ -79,9 +89,23 @@ def collect_route_facts(plan, constraints, *, trusted_pois=None, allow_identity_
                 place = (trusted_pois or {}).get(activity.entity_id)
                 if place is None and allow_identity_lookup:
                     if activity.entity_id not in resolved_ids:
-                        counts["identity_provider_calls"] += 1
                         try:
-                            resolved_ids[activity.entity_id] = (map_service.fetch_place_identity(activity.entity_id), None)
+                            lookup_args = {"poi_id": activity.entity_id}
+                            result = tool_provider.execute("get_poi", lookup_args)
+                            result = validate_result("get_poi", lookup_args, result.model_dump())
+                            counts["identity_provider_calls"] += result.metadata.provider_attempts
+                            if result.status == ToolStatus.SUCCESS:
+                                age = (clock() - result.fetched_at).total_seconds()
+                                if age < 0 or age > ROUTE_FACT_MAX_AGE_SECONDS:
+                                    resolved_ids[activity.entity_id] = (None, (OutcomeStatus.INVALID_RESPONSE, "identity_uncertain"))
+                                else:
+                                    poi = result.data
+                                    resolved_ids[activity.entity_id] = (dict(poi_id=poi.poi_id, name=poi.name,
+                                        latitude=poi.coordinates.latitude, longitude=poi.coordinates.longitude), None)
+                            elif result.status == ToolStatus.NO_DATA:
+                                resolved_ids[activity.entity_id] = (None, None)
+                            else:
+                                resolved_ids[activity.entity_id] = (None, tool_failure(result))
                         except Exception as exc:
                             resolved_ids[activity.entity_id] = (None, failure(exc))
                     place, identity_failure = resolved_ids[activity.entity_id]
@@ -99,36 +123,36 @@ def collect_route_facts(plan, constraints, *, trusted_pois=None, allow_identity_
                 deduplicated = True
                 status, reason, data, fact_status = queries[query_id]
             else:
-                cache_key = "planning:route:v1:" + sha256(query_id.encode()).hexdigest()
-                previous = None
+                arguments = {"origin": pair.origin.coordinates.model_dump(),
+                             "destination": pair.destination.coordinates.model_dump()}
                 try:
-                    cached = get_cached_json(cache_key)
-                    if cached is not None:
-                        candidate = CachedRoute.model_validate(cached)
-                        if candidate.query_id == query_id and candidate.source.fetched_at is not None:
-                            previous = candidate
-                except (ValidationError, ValueError, TypeError):
-                    pass  # Old/invalid cache is not evidence, nor a substitute for a provider call.
-                if previous is not None and source_freshness(previous.source, clock()) is None:
-                    data = previous
-                    cache_hit = True
-                    counts["cache_hits"] += 1
-                    fact_status = FactStatus.KNOWN
-                else:
-                    counts["actual_provider_calls"] += 1
-                    try:
-                        response = map_service.fetch_driving_route_fact(pair.origin.coordinates, pair.destination.coordinates)
-                        if response is None:
-                            status, reason = OutcomeStatus.NO_DATA, "no_data"
-                        else:
-                            data = CachedRoute(query_id=query_id, source=FactSource(fetched_at=clock()), **response)
-                            set_cached_json(cache_key, data.model_dump(mode="json"),
-                                            expire_seconds=ROUTE_FACT_MAX_AGE_SECONDS)
-                    except Exception as exc:
-                        status, reason = failure(exc)
-                    fact_status = FactStatus.KNOWN if reason is None else FactStatus.UNKNOWN
-                    if reason is not None and previous is not None and source_freshness(previous.source, clock()) == "stale_fact":
-                        data, fact_status = previous, FactStatus.STALE
+                    result = tool_provider.execute("get_driving_route", arguments)
+                    result = validate_result("get_driving_route", arguments, result.model_dump())
+                    counts["actual_provider_calls"] += result.metadata.provider_attempts
+                    cache_hit = result.metadata.cache_hit
+                    counts["cache_hits"] += int(cache_hit)
+                    if result.status == ToolStatus.SUCCESS:
+                        source = FactSource(fetched_at=result.fetched_at)
+                        reason = source_freshness(source, clock())
+                        data = CachedRoute(query_id=query_id, source=source,
+                            distance_meters=result.data.distance_meters, duration_seconds=result.data.duration_seconds)
+                        fact_status = FactStatus.KNOWN if reason is None else FactStatus.STALE if reason == "stale_fact" else FactStatus.UNKNOWN
+                        if reason:
+                            status = OutcomeStatus.INVALID_RESPONSE
+                    else:
+                        status, reason = tool_failure(result)
+                        fact_status = FactStatus.UNKNOWN
+                        previous = tool_provider.previous("get_driving_route", arguments)
+                        if previous is not None:
+                            previous = validate_result("get_driving_route", arguments, previous.model_dump())
+                            source = FactSource(fetched_at=previous.fetched_at)
+                            if previous.status == ToolStatus.SUCCESS and source_freshness(source, clock()) == "stale_fact":
+                                data = CachedRoute(query_id=query_id, source=source,
+                                    distance_meters=previous.data.distance_meters, duration_seconds=previous.data.duration_seconds)
+                                fact_status = FactStatus.STALE
+                except Exception as exc:
+                    status, reason = failure(exc)
+                    fact_status = FactStatus.UNKNOWN
                 queries[query_id] = (status, reason, data, fact_status)
         else:
             fact_status = FactStatus.UNKNOWN

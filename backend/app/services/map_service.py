@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 from typing import Any
+from urllib.parse import quote, quote_plus
 
 import httpx
 
@@ -19,12 +20,53 @@ from app.services.cache_service import get_cached_json, set_cached_json
 logger = logging.getLogger(__name__)
 
 
+def _redact_amap_secret(text: str) -> str:
+    if AMAP_API_KEY:
+        for value in {AMAP_API_KEY, quote(AMAP_API_KEY, safe=""), quote_plus(AMAP_API_KEY)}:
+            text = text.replace(value, "***")
+    return text
+
+
+class _AmapSecretFilter(logging.Filter):
+    """Redact rendered URL/structured args and exception text, without dropping logs."""
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        if not AMAP_API_KEY:
+            return True
+        message = record.getMessage()
+        redacted = _redact_amap_secret(message)
+        if redacted != message:
+            record.msg, record.args = redacted, ()
+        if record.exc_info:
+            exception = logging.Formatter().formatException(record.exc_info)
+            redacted = _redact_amap_secret(exception)
+            if redacted != exception:
+                record.exc_text, record.exc_info = redacted, None
+        elif record.exc_text:
+            record.exc_text = _redact_amap_secret(record.exc_text)
+        return True
+
+
+_amap_secret_filter = _AmapSecretFilter()
+
+
+def _protect_amap_logs() -> None:
+    # Logger filters do not propagate to children. Install on HTTP emitters after
+    # client construction has loaded httpcore, including optional protocol loggers.
+    names = {__name__, "httpx", "httpcore", "httpcore.http11", "httpcore.http2",
+             "httpcore.connection", "httpcore.proxy", "httpcore.socks"}
+    names.update(name for name in list(logging.Logger.manager.loggerDict)
+                 if name.startswith(("httpx.", "httpcore.")))
+    for name in names:
+        logging.getLogger(name).addFilter(_amap_secret_filter)
+
+
 class AmapServiceError(RuntimeError):
     """不包含 API Key 等敏感请求信息的高德服务错误。"""
 
     def __init__(self, message: str, reason: str | None = None) -> None:
-        super().__init__(message)
-        self.reason = reason
+        super().__init__(_redact_amap_secret(message))
+        self.reason = _redact_amap_secret(reason) if reason else reason
 
 
 def _ensure_amap_api_key() -> None:
@@ -52,6 +94,7 @@ def _request_amap(path: str, params: dict[str, Any]) -> dict[str, Any]:
 
     try:
         with _build_client() as client:
+            _protect_amap_logs()
             response = client.get(f"{AMAP_BASE_URL}{path}", params=request_params)
             response.raise_for_status()
             payload = response.json()
@@ -59,22 +102,22 @@ def _request_amap(path: str, params: dict[str, Any]) -> dict[str, Any]:
         raise AmapServiceError(
             "高德地图接口请求超时。",
             reason="request_timeout",
-        ) from exc
+        ) from None
     except httpx.HTTPStatusError as exc:
         raise AmapServiceError(
             f"高德地图接口返回 HTTP {exc.response.status_code}。",
             reason=f"http_{exc.response.status_code}",
-        ) from exc
+        ) from None
     except httpx.RequestError as exc:
         raise AmapServiceError(
             "暂时无法连接高德地图接口。",
             reason="request_error",
-        ) from exc
+        ) from None
     except ValueError as exc:
         raise AmapServiceError(
             "高德地图接口返回了无法解析的数据。",
             reason="invalid_response",
-        ) from exc
+        ) from None
 
     if not isinstance(payload, dict):
         raise AmapServiceError(
@@ -226,6 +269,7 @@ def search_places(
     types: str | None = None,
     page: int = 1,
     city_limit: bool = False,
+    use_cache: bool = True,
 ) -> list[dict[str, Any]]:
     """根据关键词搜索 POI。"""
     if not keyword.strip() and not (types or "").strip():
@@ -242,11 +286,12 @@ def search_places(
         f"{_normalize_cache_text(city or AMAP_DEFAULT_CITY)}:"
         f"{page_size}:{page}:{city_limit}"
     )
-    cached_value = get_cached_json(cache_key)
+    cached_value = get_cached_json(cache_key) if use_cache else None
     if cached_value is not None:
         logger.info("map place cache hit: keyword=%s city=%s", keyword, city or AMAP_DEFAULT_CITY)
         return cached_value
-    logger.info("map place cache miss: keyword=%s city=%s", keyword, city or AMAP_DEFAULT_CITY)
+    if use_cache:
+        logger.info("map place cache miss: keyword=%s city=%s", keyword, city or AMAP_DEFAULT_CITY)
 
     request_params: dict[str, Any] = {
         "keywords": keyword,
@@ -284,7 +329,8 @@ def search_places(
             }
         )
 
-    set_cached_json(cache_key, results, expire_seconds=REDIS_MAP_TTL_SECONDS)
+    if use_cache:
+        set_cached_json(cache_key, results, expire_seconds=REDIS_MAP_TTL_SECONDS)
     return results
 
 

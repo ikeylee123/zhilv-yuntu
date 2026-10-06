@@ -1,3 +1,5 @@
+import os
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -45,3 +47,9 @@ def health_check() -> dict[str, str]:
 app.include_router(trip_router)
 app.include_router(export_router)
 app.include_router(weather_router)
+
+
+# Explicit local/controlled-environment opt-in. Disabled for existing deployments.
+if os.getenv("ENABLE_TRAVEL_MCP", "false").lower() == "true":
+    from app.mcp.server import mount_gateway
+    mount_gateway(app)

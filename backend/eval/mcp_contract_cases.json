@@ -1,0 +1,596 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-10-06",
+  "cases": [
+    {
+      "id": "route-10min",
+      "tool": "get_driving_route",
+      "arguments": {
+        "origin": {
+          "latitude": 30,
+          "longitude": 120
+        },
+        "destination": {
+          "latitude": 30.1,
+          "longitude": 120.1
+        }
+      },
+      "provider_response": {
+        "distance_meters": "1200",
+        "duration_seconds": "600"
+      },
+      "expected": {
+        "status": "success",
+        "reason": null
+      }
+    },
+    {
+      "id": "route-45min",
+      "tool": "get_driving_route",
+      "arguments": {
+        "origin": {
+          "latitude": 30,
+          "longitude": 120
+        },
+        "destination": {
+          "latitude": 30.1,
+          "longitude": 120.1
+        }
+      },
+      "provider_response": {
+        "distance_meters": 12000,
+        "duration_seconds": 2700
+      },
+      "expected": {
+        "status": "success",
+        "reason": null
+      }
+    },
+    {
+      "id": "route-zero",
+      "tool": "get_driving_route",
+      "arguments": {
+        "origin": {
+          "latitude": 30,
+          "longitude": 120
+        },
+        "destination": {
+          "latitude": 30.1,
+          "longitude": 120.1
+        }
+      },
+      "provider_response": {
+        "distance_meters": 0,
+        "duration_seconds": 0
+      },
+      "expected": {
+        "status": "success",
+        "reason": null
+      }
+    },
+    {
+      "id": "route-bool",
+      "tool": "get_driving_route",
+      "arguments": {
+        "origin": {
+          "latitude": 30,
+          "longitude": 120
+        },
+        "destination": {
+          "latitude": 30.1,
+          "longitude": 120.1
+        }
+      },
+      "provider_response": {
+        "distance_meters": true,
+        "duration_seconds": false
+      },
+      "expected": {
+        "status": "invalid_response",
+        "reason": "INVALID_RESPONSE"
+      }
+    },
+    {
+      "id": "route-missing",
+      "tool": "get_driving_route",
+      "arguments": {
+        "origin": {
+          "latitude": 30,
+          "longitude": 120
+        },
+        "destination": {
+          "latitude": 30.1,
+          "longitude": 120.1
+        }
+      },
+      "provider_response": {
+        "distance_meters": 10
+      },
+      "expected": {
+        "status": "invalid_response",
+        "reason": "INVALID_RESPONSE"
+      }
+    },
+    {
+      "id": "route-negative",
+      "tool": "get_driving_route",
+      "arguments": {
+        "origin": {
+          "latitude": 30,
+          "longitude": 120
+        },
+        "destination": {
+          "latitude": 30.1,
+          "longitude": 120.1
+        }
+      },
+      "provider_response": {
+        "distance_meters": 1,
+        "duration_seconds": -1
+      },
+      "expected": {
+        "status": "invalid_response",
+        "reason": "INVALID_RESPONSE"
+      }
+    },
+    {
+      "id": "route-nan",
+      "tool": "get_driving_route",
+      "arguments": {
+        "origin": {
+          "latitude": 30,
+          "longitude": 120
+        },
+        "destination": {
+          "latitude": 30.1,
+          "longitude": 120.1
+        }
+      },
+      "provider_response": {
+        "distance_meters": "NaN",
+        "duration_seconds": 1
+      },
+      "expected": {
+        "status": "invalid_response",
+        "reason": "INVALID_RESPONSE"
+      }
+    },
+    {
+      "id": "route-inf",
+      "tool": "get_driving_route",
+      "arguments": {
+        "origin": {
+          "latitude": 30,
+          "longitude": 120
+        },
+        "destination": {
+          "latitude": 30.1,
+          "longitude": 120.1
+        }
+      },
+      "provider_response": {
+        "distance_meters": 1,
+        "duration_seconds": "Infinity"
+      },
+      "expected": {
+        "status": "invalid_response",
+        "reason": "INVALID_RESPONSE"
+      }
+    },
+    {
+      "id": "route-empty",
+      "tool": "get_driving_route",
+      "arguments": {
+        "origin": {
+          "latitude": 30,
+          "longitude": 120
+        },
+        "destination": {
+          "latitude": 30.1,
+          "longitude": 120.1
+        }
+      },
+      "provider_response": null,
+      "expected": {
+        "status": "no_data",
+        "reason": "NO_DATA"
+      }
+    },
+    {
+      "id": "route-timeout",
+      "tool": "get_driving_route",
+      "arguments": {
+        "origin": {
+          "latitude": 30,
+          "longitude": 120
+        },
+        "destination": {
+          "latitude": 30.1,
+          "longitude": 120.1
+        }
+      },
+      "provider_response": null,
+      "expected": {
+        "status": "timeout",
+        "reason": "TIMEOUT"
+      },
+      "exception": "timeout"
+    },
+    {
+      "id": "route-provider-error",
+      "tool": "get_driving_route",
+      "arguments": {
+        "origin": {
+          "latitude": 30,
+          "longitude": 120
+        },
+        "destination": {
+          "latitude": 30.1,
+          "longitude": 120.1
+        }
+      },
+      "provider_response": null,
+      "expected": {
+        "status": "provider_error",
+        "reason": "PROVIDER_ERROR"
+      },
+      "exception": "provider_error"
+    },
+    {
+      "id": "route-stale-source",
+      "tool": "get_driving_route",
+      "arguments": {
+        "origin": {
+          "latitude": 30,
+          "longitude": 120
+        },
+        "destination": {
+          "latitude": 30.1,
+          "longitude": 120.1
+        }
+      },
+      "provider_response": {
+        "distance_meters": 1200,
+        "duration_seconds": 600
+      },
+      "expected": {
+        "status": "success",
+        "reason": null
+      },
+      "fetched_at": "2026-10-05T00:00:00+00:00"
+    },
+    {
+      "id": "route-walking",
+      "tool": "get_driving_route",
+      "arguments": {
+        "origin": {
+          "latitude": 30,
+          "longitude": 120
+        },
+        "destination": {
+          "latitude": 30.1,
+          "longitude": 120.1
+        },
+        "mode": "walking"
+      },
+      "provider_response": null,
+      "expected": {
+        "status": "unsupported",
+        "reason": "UNSUPPORTED"
+      }
+    },
+    {
+      "id": "route-strategy",
+      "tool": "get_driving_route",
+      "arguments": {
+        "origin": {
+          "latitude": 30,
+          "longitude": 120
+        },
+        "destination": {
+          "latitude": 30.1,
+          "longitude": 120.1
+        },
+        "strategy": 1
+      },
+      "provider_response": null,
+      "expected": {
+        "status": "unsupported",
+        "reason": "UNSUPPORTED"
+      }
+    },
+    {
+      "id": "route-reversed",
+      "tool": "get_driving_route",
+      "arguments": {
+        "origin": {
+          "latitude": 30.1,
+          "longitude": 120.1
+        },
+        "destination": {
+          "latitude": 30,
+          "longitude": 120
+        }
+      },
+      "provider_response": {
+        "distance_meters": 2000,
+        "duration_seconds": 900
+      },
+      "expected": {
+        "status": "success",
+        "reason": null
+      }
+    },
+    {
+      "id": "search-success",
+      "tool": "search_poi",
+      "arguments": {
+        "query": "Museum",
+        "city_or_adcode": "330100",
+        "category": "spot",
+        "page_size": 5
+      },
+      "provider_response": [
+        {
+          "poi_id": "a",
+          "name": "Museum",
+          "latitude": 30,
+          "longitude": 120,
+          "address": "Road",
+          "adcode": "330100",
+          "type": "provider category"
+        }
+      ],
+      "expected": {
+        "status": "success",
+        "reason": null
+      }
+    },
+    {
+      "id": "search-empty",
+      "tool": "search_poi",
+      "arguments": {
+        "query": "Museum",
+        "city_or_adcode": "330100",
+        "category": "spot",
+        "page_size": 5
+      },
+      "provider_response": [],
+      "expected": {
+        "status": "no_data",
+        "reason": "NO_DATA"
+      }
+    },
+    {
+      "id": "search-bad-coordinate",
+      "tool": "search_poi",
+      "arguments": {
+        "query": "Museum",
+        "city_or_adcode": "330100",
+        "category": "spot",
+        "page_size": 5
+      },
+      "provider_response": [
+        {
+          "poi_id": "a",
+          "name": "Museum",
+          "latitude": 91,
+          "longitude": 120,
+          "address": "Road",
+          "adcode": "330100",
+          "type": "provider category"
+        }
+      ],
+      "expected": {
+        "status": "invalid_response",
+        "reason": "INVALID_RESPONSE"
+      }
+    },
+    {
+      "id": "search-no-coordinate",
+      "tool": "search_poi",
+      "arguments": {
+        "query": "Museum",
+        "city_or_adcode": "330100",
+        "category": "spot",
+        "page_size": 5
+      },
+      "provider_response": [
+        {
+          "poi_id": "a",
+          "name": "Museum",
+          "latitude": null,
+          "longitude": null,
+          "address": "Road",
+          "adcode": "330100",
+          "type": "provider category"
+        }
+      ],
+      "expected": {
+        "status": "success",
+        "reason": null
+      }
+    },
+    {
+      "id": "search-bad-identity",
+      "tool": "search_poi",
+      "arguments": {
+        "query": "Museum",
+        "city_or_adcode": "330100",
+        "category": "spot",
+        "page_size": 5
+      },
+      "provider_response": [
+        {
+          "poi_id": " ",
+          "name": "Museum",
+          "latitude": 30,
+          "longitude": 120,
+          "address": "Road",
+          "adcode": "330100",
+          "type": "provider category"
+        }
+      ],
+      "expected": {
+        "status": "invalid_response",
+        "reason": "INVALID_RESPONSE"
+      }
+    },
+    {
+      "id": "search-page-two",
+      "tool": "search_poi",
+      "arguments": {
+        "query": "Museum",
+        "city_or_adcode": "330100",
+        "category": "spot",
+        "page_size": 5,
+        "page": 2
+      },
+      "provider_response": [
+        {
+          "poi_id": "a",
+          "name": "Museum",
+          "latitude": 30,
+          "longitude": 120,
+          "address": "Road",
+          "adcode": "330100",
+          "type": "provider category"
+        }
+      ],
+      "expected": {
+        "status": "success",
+        "reason": null
+      }
+    },
+    {
+      "id": "search-hotel",
+      "tool": "search_poi",
+      "arguments": {
+        "query": "Museum",
+        "city_or_adcode": "330100",
+        "category": "hotel",
+        "page_size": 5
+      },
+      "provider_response": [
+        {
+          "poi_id": "h",
+          "name": "Museum",
+          "latitude": 30,
+          "longitude": 120,
+          "address": "Road",
+          "adcode": "330100",
+          "type": "provider category"
+        }
+      ],
+      "expected": {
+        "status": "success",
+        "reason": null
+      }
+    },
+    {
+      "id": "lookup-exact",
+      "tool": "get_poi",
+      "arguments": {
+        "poi_id": "a"
+      },
+      "provider_response": {
+        "poi_id": "a",
+        "name": "Museum",
+        "latitude": 30,
+        "longitude": 120,
+        "address": "Road",
+        "adcode": "330100",
+        "type": "provider category"
+      },
+      "expected": {
+        "status": "success",
+        "reason": null
+      }
+    },
+    {
+      "id": "lookup-mismatch",
+      "tool": "get_poi",
+      "arguments": {
+        "poi_id": "a"
+      },
+      "provider_response": {
+        "poi_id": "b",
+        "name": "Museum",
+        "latitude": 30,
+        "longitude": 120,
+        "address": "Road",
+        "adcode": "330100",
+        "type": "provider category"
+      },
+      "expected": {
+        "status": "invalid_response",
+        "reason": "ID_MISMATCH"
+      }
+    },
+    {
+      "id": "lookup-empty",
+      "tool": "get_poi",
+      "arguments": {
+        "poi_id": "a"
+      },
+      "provider_response": null,
+      "expected": {
+        "status": "no_data",
+        "reason": "NO_DATA"
+      }
+    },
+    {
+      "id": "lookup-invalid-coordinate",
+      "tool": "get_poi",
+      "arguments": {
+        "poi_id": "a"
+      },
+      "provider_response": {
+        "poi_id": "a",
+        "name": "Museum",
+        "latitude": 30,
+        "longitude": 181,
+        "address": "Road",
+        "adcode": "330100",
+        "type": "provider category"
+      },
+      "expected": {
+        "status": "invalid_response",
+        "reason": "INVALID_RESPONSE"
+      }
+    },
+    {
+      "id": "lookup-missing-coordinate",
+      "tool": "get_poi",
+      "arguments": {
+        "poi_id": "a"
+      },
+      "provider_response": {
+        "poi_id": "a",
+        "name": "Museum",
+        "latitude": null,
+        "longitude": null,
+        "address": "Road",
+        "adcode": "330100",
+        "type": "provider category"
+      },
+      "expected": {
+        "status": "invalid_response",
+        "reason": "INVALID_RESPONSE"
+      }
+    },
+    {
+      "id": "lookup-timeout",
+      "tool": "get_poi",
+      "arguments": {
+        "poi_id": "a"
+      },
+      "provider_response": null,
+      "expected": {
+        "status": "timeout",
+        "reason": "TIMEOUT"
+      },
+      "exception": "timeout"
+    }
+  ]
+}
