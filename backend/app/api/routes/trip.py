@@ -267,6 +267,8 @@ def delete_trip(trip_id: str) -> dict[str, str]:
 from fastapi import Depends
 from app.models.replanning import PlanChangeRequest, CandidatePreparationRequest, ReplanDecision, AllowedCandidateSet
 from app.services.replanning_service import ReplanningService
+from app.models.candidate_selection import ReplanSelectionRequest, SelectionDecision
+from app.services.replanning_selection import BoundedSelectionService
 
 
 def get_replanning_service():
@@ -281,9 +283,9 @@ def prepare_replan_candidates(trip_id: str, request: CandidatePreparationRequest
     return _state_call(service.prepare, request)
 
 
-@router.post("/{trip_id}/replan", response_model=ReplanDecision)
-def replan_trip(trip_id: str, request: PlanChangeRequest,
+@router.post("/{trip_id}/replan", response_model=SelectionDecision)
+def replan_trip(trip_id: str, request: ReplanSelectionRequest,
                 service: ReplanningService = Depends(get_replanning_service)):
     if trip_id != request.trip_id:
         raise HTTPException(status_code=422, detail={"code": "INVALID_CHANGE_REQUEST"})
-    return service.replan(request)
+    return BoundedSelectionService(service).replan(request)

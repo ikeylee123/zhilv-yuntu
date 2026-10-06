@@ -6,6 +6,7 @@ docs/*
 !docs/phase2_5-mcp-tool-infrastructure.md
 !docs/phase3a-authoritative-state.md
 !docs/phase3b-deterministic-replanning.md
+!docs/phase3c-bounded-llm-selection.md
 
 # Environment files
 .env

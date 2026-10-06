@@ -29,6 +29,10 @@ LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
 LLM_BASE_URL = os.getenv("LLM_BASE_URL", "")
 LLM_TIMEOUT_SECONDS = int(os.getenv("LLM_TIMEOUT_SECONDS", "60"))
 LLM_MAX_RETRIES = int(os.getenv("LLM_MAX_RETRIES", "1"))
+# Bounded selector reuses the existing client/key/base URL, with zero SDK retries.
+CANDIDATE_SELECTOR_MODEL = os.getenv("CANDIDATE_SELECTOR_MODEL", LLM_MODEL)
+CANDIDATE_SELECTOR_TIMEOUT_SECONDS = float(os.getenv("CANDIDATE_SELECTOR_TIMEOUT_SECONDS", "15"))
+REPLAN_SELECTION_DEADLINE_SECONDS = float(os.getenv("REPLAN_SELECTION_DEADLINE_SECONDS", "60"))
 
 
 # RAG / 向量库配置
