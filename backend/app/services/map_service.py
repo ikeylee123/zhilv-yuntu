@@ -500,3 +500,36 @@ def enrich_itinerary_with_map_data(itinerary: Itinerary, city: str | None = None
             itinerary.source_notes.append(note)
 
     return itinerary
+
+
+def fetch_driving_route_fact(origin, destination) -> dict[str, Any] | None:
+    """Fresh, uncached driving estimate for Phase 2; never use the legacy 24h cache."""
+    payload = _request_amap("/direction/driving", {
+        "origin": f"{origin.longitude},{origin.latitude}",
+        "destination": f"{destination.longitude},{destination.latitude}", "strategy": 0,
+    })
+    route = payload.get("route")
+    if not isinstance(route, dict) or not isinstance(route.get("paths"), list):
+        raise AmapServiceError("Malformed route response", reason="invalid_response")
+    if not route["paths"]:
+        return None
+    path = route["paths"][0]
+    if not isinstance(path, dict):
+        raise AmapServiceError("Malformed route path", reason="invalid_response")
+    # Preserve raw units and missing fields; the typed collector validates numeric data.
+    return {"distance_meters": path.get("distance"), "duration_seconds": path.get("duration")}
+
+
+def fetch_place_identity(poi_id: str) -> dict[str, Any] | None:
+    """Exact ID lookup for edit/save binding; no name search or first-result substitution."""
+    payload = _request_amap("/place/detail", {"id": poi_id, "extensions": "base"})
+    places = payload.get("pois")
+    if not isinstance(places, list):
+        raise AmapServiceError("Malformed POI response", reason="invalid_response")
+    matches = [place for place in places if isinstance(place, dict) and place.get("id") == poi_id]
+    if len(matches) != 1:
+        return None
+    place = matches[0]
+    latitude, longitude = _split_location(place.get("location"))
+    return {"poi_id": place.get("id"), "name": place.get("name"),
+            "latitude": latitude, "longitude": longitude}

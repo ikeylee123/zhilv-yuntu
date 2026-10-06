@@ -10,7 +10,8 @@ from app.agents.trip_planner_agent import (
     generate_dynamic_planner_draft,
     generate_planner_draft,
 )
-from app.services.plan_validator import attach_validation, ensure_date_range
+from app.services.plan_validator import ensure_date_range
+from app.services.planning_fact_service import attach_server_validation
 from app.config import ENABLE_AMAP_ENRICHMENT
 from app.models.schemas import (
     BudgetBreakdown,
@@ -498,8 +499,12 @@ def generate_dynamic_trip_itinerary(
             planner_completion_tokens=planner_usage.get("completion_tokens", 0),
         ),
     )
-    return attach_validation(
-        _refresh_budget_breakdown(itinerary, request_budget=request.budget), request
+    return attach_server_validation(
+        _refresh_budget_breakdown(itinerary, request_budget=request.budget), request,
+        trusted_pois={c.poi_id: {"poi_id": c.poi_id, "name": c.name,
+                      "latitude": c.latitude, "longitude": c.longitude}
+                      for c in candidate_pool.candidates_for(PlaceCandidateCategory.SPOT)},
+        allow_identity_lookup=False,
     )
 
 
@@ -765,7 +770,7 @@ def generate_trip_itinerary(request: TripRequest) -> Itinerary:
         city=request.destination,
         request_budget=request.budget,
     )
-    return attach_validation(itinerary, request)
+    return attach_server_validation(itinerary, request, allow_identity_lookup=False)
 
 
 def edit_trip_itinerary(request: TripEditRequest) -> Itinerary:
@@ -871,4 +876,4 @@ def edit_trip_itinerary(request: TripEditRequest) -> Itinerary:
         city=updated_itinerary.destination,
         request_budget=reference_budget,
     )
-    return attach_validation(updated_itinerary, increment_version=True)
+    return attach_server_validation(updated_itinerary, increment_version=True)

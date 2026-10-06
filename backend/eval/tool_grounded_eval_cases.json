@@ -1,0 +1,5961 @@
+{
+  "description": "Fixed synthetic route evidence regression set; not production accuracy. Failure fixtures contain normalized evidence; collector tests cover raw failures.",
+  "cases": [
+    {
+      "id": "route-enough",
+      "category": "route",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "9432003e60c5a8404620e9a25896077fe6c5bfa2729a7713d5464c1f591b5bd7",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 600,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "valid",
+        "error_types": [],
+        "unknown_types": [],
+        "route_unknown_reasons": [],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 1,
+          "unknown_pairs": 0,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 1
+      }
+    },
+    {
+      "id": "route-insufficient",
+      "category": "route",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "9432003e60c5a8404620e9a25896077fe6c5bfa2729a7713d5464c1f591b5bd7",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 2100,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "route_time_violation"
+        ],
+        "unknown_types": [],
+        "route_unknown_reasons": [],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 1,
+          "unknown_pairs": 0,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 1
+      }
+    },
+    {
+      "id": "route-boundary",
+      "category": "route",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "9432003e60c5a8404620e9a25896077fe6c5bfa2729a7713d5464c1f591b5bd7",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 1200,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "valid",
+        "error_types": [],
+        "unknown_types": [],
+        "route_unknown_reasons": [],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 1,
+          "unknown_pairs": 0,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 1
+      }
+    },
+    {
+      "id": "route-seconds",
+      "category": "route",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "9432003e60c5a8404620e9a25896077fe6c5bfa2729a7713d5464c1f591b5bd7",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 1200.01,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "route_time_violation"
+        ],
+        "unknown_types": [],
+        "route_unknown_reasons": [],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 1,
+          "unknown_pairs": 0,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 1
+      }
+    },
+    {
+      "id": "route-mode-walking",
+      "category": "route",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "walking"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "ab06d985f8a175da47e5007e5c2e40bd991fdda7788e97d073a7dd433116fd15",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 600,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "unsupported_mode"
+        ],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 0,
+          "unknown_pairs": 1,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "route-mode-transit",
+      "category": "route",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "transit"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "dfd23381481df6b5c687dda9b6e39fba336a3a0a86485fda9cac3afc5823ef06",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 600,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "unsupported_mode"
+        ],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 0,
+          "unknown_pairs": 1,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "route-mode-cycling",
+      "category": "route",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "cycling"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "4bdd921c40d5b8001cbbf9e6b51c2ba493c0de2cb878676a61673438f5939488",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 600,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "unsupported_mode"
+        ],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 0,
+          "unknown_pairs": 1,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "route-mode-mixed",
+      "category": "route",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "mixed"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "8f19566007228453506d8d59f2c0015d017a2ff73f7ceb26594969e53370b291",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 600,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "unsupported_mode"
+        ],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 0,
+          "unknown_pairs": 1,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "route-mode-taxi",
+      "category": "route",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "taxi"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "bd48a0bf8a2de18abfe9f89ffc20477febf627f8f700861c7e1cc0e348703820",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 600,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "unsupported_mode"
+        ],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 0,
+          "unknown_pairs": 1,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "route-mode-None",
+      "category": "route",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": null
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "d0f076fd99cc61f25da22650a42aebe2412428d0aae10ea7b8085de2ae2efc70",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 600,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "unsupported_mode"
+        ],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 0,
+          "unknown_pairs": 1,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "route-adjacent",
+      "category": "route",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:00",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "8e6c936cbc8bb0fde36ebef4b01b22674fa7bae36e7b47f8d36975b5e75d130f",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:00",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 1,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "route_time_violation"
+        ],
+        "unknown_types": [],
+        "route_unknown_reasons": [],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 1,
+          "unknown_pairs": 0,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 1
+      }
+    },
+    {
+      "id": "route-large-gap",
+      "category": "route",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "18:00",
+                  "end_time": "19:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "a87402260ee65b07d53aa40e8911d72902dad000aebf6d5dc8f40813c2580903",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "18:00",
+                "end_time": "19:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 7200,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "valid",
+        "error_types": [],
+        "unknown_types": [],
+        "route_unknown_reasons": [],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 1,
+          "unknown_pairs": 0,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 1
+      }
+    },
+    {
+      "id": "route-zero-duration",
+      "category": "route",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "9432003e60c5a8404620e9a25896077fe6c5bfa2729a7713d5464c1f591b5bd7",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 0,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "valid",
+        "error_types": [],
+        "unknown_types": [],
+        "route_unknown_reasons": [],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 1,
+          "unknown_pairs": 0,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 1
+      }
+    },
+    {
+      "id": "route-zero-adjacent",
+      "category": "route",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:00",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "8e6c936cbc8bb0fde36ebef4b01b22674fa7bae36e7b47f8d36975b5e75d130f",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:00",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 0,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "valid",
+        "error_types": [],
+        "unknown_types": [],
+        "route_unknown_reasons": [],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 1,
+          "unknown_pairs": 0,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 1
+      }
+    },
+    {
+      "id": "route-fractional-under",
+      "category": "route",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "9432003e60c5a8404620e9a25896077fe6c5bfa2729a7713d5464c1f591b5bd7",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 1199.999,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "valid",
+        "error_types": [],
+        "unknown_types": [],
+        "route_unknown_reasons": [],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 1,
+          "unknown_pairs": 0,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 1
+      }
+    },
+    {
+      "id": "route-overlap",
+      "category": "route",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "10:50",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "010a4e119c8301309f39c91488421b0a552ea23084e64c54ea104e7359b4eb5f",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "10:50",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 60,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "activity_overlap",
+          "route_time_violation"
+        ],
+        "unknown_types": [],
+        "route_unknown_reasons": [],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 1,
+          "unknown_pairs": 0,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 1
+      }
+    },
+    {
+      "id": "identity-same-id",
+      "category": "identity",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "69634dcd86b1c47ea15c8570117dec06b9c39b82a2adb4ef07691b0d01fefc97",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 0,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "valid",
+        "error_types": [],
+        "unknown_types": [],
+        "route_unknown_reasons": [],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 1,
+          "unknown_pairs": 0,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 1
+      }
+    },
+    {
+      "id": "identity-same-name-different-id",
+      "category": "identity",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Museum",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "1e19d88042b6dba6c64c8fa8ff5df8f207cc25a3aa95ec50d11f390e4c203060",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Museum",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 600,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "valid",
+        "error_types": [],
+        "unknown_types": [],
+        "route_unknown_reasons": [],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 1,
+          "unknown_pairs": 0,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 1
+      }
+    },
+    {
+      "id": "identity-missing-id",
+      "category": "identity",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": null,
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "f91bc4a4cef3e11b08b0d19b387c49134cba7a011ecefd2f87ce215e97d12887",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "unknown",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": null,
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": null,
+              "duration_seconds": null,
+              "source": null,
+              "reason": "identity_uncertain"
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "identity_uncertain"
+        ],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 0,
+          "unknown_pairs": 1,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "identity-unconfirmed",
+      "category": "identity",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "9432003e60c5a8404620e9a25896077fe6c5bfa2729a7713d5464c1f591b5bd7",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "unknown",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": null,
+              "duration_seconds": null,
+              "source": null,
+              "reason": "identity_uncertain"
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "identity_uncertain"
+        ],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 0,
+          "unknown_pairs": 1,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "identity-coordinate-change",
+      "category": "identity",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 121.0,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "9432003e60c5a8404620e9a25896077fe6c5bfa2729a7713d5464c1f591b5bd7",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 600,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "unbound_activity_pair"
+        ],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 0,
+          "unknown_pairs": 1,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "identity-wrong-pair",
+      "category": "identity",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "9432003e60c5a8404620e9a25896077fe6c5bfa2729a7713d5464c1f591b5bd7",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "other",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 600,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "unbound_activity_pair"
+        ],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 0,
+          "unknown_pairs": 1,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "identity-reversed-pair",
+      "category": "identity",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "9432003e60c5a8404620e9a25896077fe6c5bfa2729a7713d5464c1f591b5bd7",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 600,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "unbound_activity_pair"
+        ],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 0,
+          "unknown_pairs": 1,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "identity-old-fingerprint",
+      "category": "identity",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "old-plan",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 600,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "unbound_activity_pair"
+        ],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 0,
+          "unknown_pairs": 1,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "freshness-fresh",
+      "category": "freshness",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "9432003e60c5a8404620e9a25896077fe6c5bfa2729a7713d5464c1f591b5bd7",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 600,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-05T23:59:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "valid",
+        "error_types": [],
+        "unknown_types": [],
+        "route_unknown_reasons": [],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 1,
+          "unknown_pairs": 0,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 1
+      }
+    },
+    {
+      "id": "freshness-expired",
+      "category": "freshness",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "9432003e60c5a8404620e9a25896077fe6c5bfa2729a7713d5464c1f591b5bd7",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 600,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-05T23:44:59Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "stale_fact"
+        ],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 0,
+          "unknown_pairs": 1,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "freshness-no-timestamp",
+      "category": "freshness",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "9432003e60c5a8404620e9a25896077fe6c5bfa2729a7713d5464c1f591b5bd7",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "stale",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": null,
+              "duration_seconds": null,
+              "source": null,
+              "reason": "stale_fact"
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "stale_fact"
+        ],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 0,
+          "unknown_pairs": 1,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "freshness-future-timestamp",
+      "category": "freshness",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "9432003e60c5a8404620e9a25896077fe6c5bfa2729a7713d5464c1f591b5bd7",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 600,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:01Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "invalid_response"
+        ],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 0,
+          "unknown_pairs": 1,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "freshness-conflicting",
+      "category": "freshness",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "9432003e60c5a8404620e9a25896077fe6c5bfa2729a7713d5464c1f591b5bd7",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 600,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            },
+            {
+              "fact_id": "conflict",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 2100,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "conflicting_fact"
+        ],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 0,
+          "unknown_pairs": 1,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "freshness-identical-duplicate",
+      "category": "freshness",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "9432003e60c5a8404620e9a25896077fe6c5bfa2729a7713d5464c1f591b5bd7",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 600,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            },
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 600,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "valid",
+        "error_types": [],
+        "unknown_types": [],
+        "route_unknown_reasons": [],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 1,
+          "unknown_pairs": 0,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 1
+      }
+    },
+    {
+      "id": "freshness-outdated-policy",
+      "category": "freshness",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "9432003e60c5a8404620e9a25896077fe6c5bfa2729a7713d5464c1f591b5bd7",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "old-policy"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 600,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "outdated_policy"
+        ],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 0,
+          "unknown_pairs": 1,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "freshness-changed-mode",
+      "category": "freshness",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "walking"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "9432003e60c5a8404620e9a25896077fe6c5bfa2729a7713d5464c1f591b5bd7",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 600,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "unsupported_mode"
+        ],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 0,
+          "unknown_pairs": 1,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "failure-timeout",
+      "category": "failure",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "9432003e60c5a8404620e9a25896077fe6c5bfa2729a7713d5464c1f591b5bd7",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "unknown",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": null,
+              "duration_seconds": null,
+              "source": null,
+              "reason": "timeout"
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "timeout"
+        ],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 0,
+          "unknown_pairs": 1,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "failure-provider-error",
+      "category": "failure",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "9432003e60c5a8404620e9a25896077fe6c5bfa2729a7713d5464c1f591b5bd7",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "unknown",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": null,
+              "duration_seconds": null,
+              "source": null,
+              "reason": "provider_error"
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "provider_error"
+        ],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 0,
+          "unknown_pairs": 1,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "failure-empty-paths",
+      "category": "failure",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "9432003e60c5a8404620e9a25896077fe6c5bfa2729a7713d5464c1f591b5bd7",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "unknown",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": null,
+              "duration_seconds": null,
+              "source": null,
+              "reason": "no_data"
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "no_data"
+        ],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 0,
+          "unknown_pairs": 1,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "failure-missing-duration",
+      "category": "failure",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "9432003e60c5a8404620e9a25896077fe6c5bfa2729a7713d5464c1f591b5bd7",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "unknown",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": null,
+              "duration_seconds": null,
+              "source": null,
+              "reason": "invalid_response"
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "invalid_response"
+        ],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 0,
+          "unknown_pairs": 1,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "failure-negative-duration",
+      "category": "failure",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "9432003e60c5a8404620e9a25896077fe6c5bfa2729a7713d5464c1f591b5bd7",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "unknown",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": null,
+              "duration_seconds": null,
+              "source": null,
+              "reason": "invalid_response"
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "invalid_response"
+        ],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 0,
+          "unknown_pairs": 1,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "failure-nonfinite",
+      "category": "failure",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "9432003e60c5a8404620e9a25896077fe6c5bfa2729a7713d5464c1f591b5bd7",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "unknown",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": null,
+              "duration_seconds": null,
+              "source": null,
+              "reason": "invalid_response"
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "invalid_response"
+        ],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 0,
+          "unknown_pairs": 1,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "failure-partial-response",
+      "category": "failure",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "9432003e60c5a8404620e9a25896077fe6c5bfa2729a7713d5464c1f591b5bd7",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "unknown",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": null,
+              "duration_seconds": null,
+              "source": null,
+              "reason": "invalid_response"
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "invalid_response"
+        ],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 0,
+          "unknown_pairs": 1,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "failure-missing-coordinates",
+      "category": "failure",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": null,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "16c90919058ede9c655ca5a94dad329d9e3ad911ceff8dfa87b19ced60f94cf7",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "unknown",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": null
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": null,
+              "duration_seconds": null,
+              "source": null,
+              "reason": "missing_coordinates"
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "missing_coordinates"
+        ],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 0,
+          "unknown_pairs": 1,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "combined-overlap-route",
+      "category": "combined",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "10:45",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "a215de52cb85a1b617c1452ffb7f75e7c94b3c83fd93c9731a1df8add99331f5",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "10:45",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 1200,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "activity_overlap",
+          "route_time_violation"
+        ],
+        "unknown_types": [],
+        "route_unknown_reasons": [],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 1,
+          "unknown_pairs": 0,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 1
+      }
+    },
+    {
+      "id": "combined-budget-error-route-unknown",
+      "category": "combined",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving",
+          "budget_limit": 0
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "9432003e60c5a8404620e9a25896077fe6c5bfa2729a7713d5464c1f591b5bd7",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "unknown",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": null,
+              "duration_seconds": null,
+              "source": null,
+              "reason": "timeout"
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "invalid",
+        "error_types": [
+          "budget_exceeded"
+        ],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "timeout"
+        ],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 0,
+          "unknown_pairs": 1,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "combined-missing-fact",
+      "category": "combined",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "9432003e60c5a8404620e9a25896077fe6c5bfa2729a7713d5464c1f591b5bd7",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "missing_route"
+        ],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 0,
+          "unknown_pairs": 1,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "combined-zero-not-required",
+      "category": "combined",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": false
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "c06472cd14ea5760308d36143f948836f0f736e55117551aa4b17e7a5362266b",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "valid",
+        "error_types": [],
+        "unknown_types": [],
+        "route_unknown_reasons": [],
+        "coverage": {
+          "required_pairs": 0,
+          "verified_pairs": 0,
+          "unknown_pairs": 0,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "combined-zero-required",
+      "category": "combined",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "fc831b501f1d49ecfd7e44791e478332d6d18cf3c154a738ff03d09e23e62d01",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "insufficient_schedule_coverage"
+        ],
+        "coverage": {
+          "required_pairs": 0,
+          "verified_pairs": 0,
+          "unknown_pairs": 0,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 0
+      }
+    },
+    {
+      "id": "combined-multi-day",
+      "category": "combined",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-07",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            },
+            {
+              "day_index": 2,
+              "date": "2026-10-07",
+              "spots": [
+                {
+                  "poi_id": "c",
+                  "name": "Temple",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "d",
+                  "name": "Square",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "20a186172e9f2129dc17c1f7c7cc743f47efef2e890be71105c31968d1707205",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 600,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            },
+            {
+              "fact_id": "fact-1",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[1].spots[0]",
+                "day_index": 2,
+                "date": "2026-10-07",
+                "activity_type": "attraction",
+                "entity_id": "c",
+                "name": "Temple",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[1].spots[1]",
+                "day_index": 2,
+                "date": "2026-10-07",
+                "activity_type": "attraction",
+                "entity_id": "d",
+                "name": "Square",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 600,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "valid",
+        "error_types": [],
+        "unknown_types": [],
+        "route_unknown_reasons": [],
+        "coverage": {
+          "required_pairs": 2,
+          "verified_pairs": 2,
+          "unknown_pairs": 0,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 2
+      }
+    },
+    {
+      "id": "combined-partial-facts",
+      "category": "combined",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving"
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 100,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                },
+                {
+                  "poi_id": "c",
+                  "name": "Temple",
+                  "longitude": 120.2,
+                  "latitude": 30.1,
+                  "start_time": "12:20",
+                  "end_time": "13:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "92b7e84e90a2bba993762afcae1188d729bf40ad6b62673d07b54117f95f8201",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 600,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            },
+            {
+              "fact_id": "fact-1",
+              "status": "unknown",
+              "origin": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[2]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "c",
+                "name": "Temple",
+                "start_time": "12:20",
+                "end_time": "13:00",
+                "coordinates": {
+                  "longitude": 120.2,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": null,
+              "duration_seconds": null,
+              "source": null,
+              "reason": "timeout"
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "unverifiable",
+        "error_types": [],
+        "unknown_types": [
+          "route_feasibility_unverifiable"
+        ],
+        "route_unknown_reasons": [
+          "timeout"
+        ],
+        "coverage": {
+          "required_pairs": 2,
+          "verified_pairs": 1,
+          "unknown_pairs": 1,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 1
+      }
+    },
+    {
+      "id": "combined-warning-only",
+      "category": "combined",
+      "input": {
+        "trip_request": {
+          "destination": "Fixture City",
+          "start_date": "2026-10-06",
+          "end_date": "2026-10-06",
+          "travelers": 1,
+          "budget": 1000
+        },
+        "constraints": {
+          "require_route_feasibility": true,
+          "transport_preference": "driving",
+          "budget_limit": 200,
+          "soft_preferences": [
+            "quiet"
+          ]
+        },
+        "current_itinerary": {
+          "trip_id": "offline",
+          "destination": "Fixture City",
+          "summary": "Fixed route fixture",
+          "estimated_budget": 90,
+          "budget_breakdown": {
+            "total": 100
+          },
+          "days": [
+            {
+              "day_index": 1,
+              "date": "2026-10-06",
+              "spots": [
+                {
+                  "poi_id": "a",
+                  "name": "Museum",
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "start_time": "09:00",
+                  "end_time": "11:00"
+                },
+                {
+                  "poi_id": "b",
+                  "name": "Garden",
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "start_time": "11:20",
+                  "end_time": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        "evaluation_time": "2026-10-06T00:00:00Z",
+        "planning_facts": {
+          "metadata": {
+            "run_id": "offline-fixed",
+            "plan_fingerprint": "9432003e60c5a8404620e9a25896077fe6c5bfa2729a7713d5464c1f591b5bd7",
+            "collected_at": "2026-10-06T00:00:00Z",
+            "schema_version": "route-facts-v1",
+            "policy_version": "driving-estimate-v1"
+          },
+          "route_facts": [
+            {
+              "fact_id": "fact-0",
+              "status": "known",
+              "origin": {
+                "activity_ref": "days[0].spots[0]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "a",
+                "name": "Museum",
+                "start_time": "09:00",
+                "end_time": "11:00",
+                "coordinates": {
+                  "longitude": 120.0,
+                  "latitude": 30.0,
+                  "system": "GCJ-02"
+                }
+              },
+              "destination": {
+                "activity_ref": "days[0].spots[1]",
+                "day_index": 1,
+                "date": "2026-10-06",
+                "activity_type": "attraction",
+                "entity_id": "b",
+                "name": "Garden",
+                "start_time": "11:20",
+                "end_time": "12:00",
+                "coordinates": {
+                  "longitude": 120.1,
+                  "latitude": 30.1,
+                  "system": "GCJ-02"
+                }
+              },
+              "mode": "driving",
+              "distance_meters": 5000,
+              "duration_seconds": 600,
+              "source": {
+                "provider": "amap",
+                "endpoint": "/direction/driving",
+                "api_version": "v3",
+                "strategy": 0,
+                "fetched_at": "2026-10-06T00:00:00Z",
+                "evidence_kind": "provider_estimate"
+              },
+              "reason": null
+            }
+          ],
+          "collection_outcomes": []
+        }
+      },
+      "expected": {
+        "status": "valid",
+        "error_types": [],
+        "unknown_types": [],
+        "route_unknown_reasons": [],
+        "coverage": {
+          "required_pairs": 1,
+          "verified_pairs": 1,
+          "unknown_pairs": 0,
+          "skipped_pairs": 0
+        },
+        "eligible_known_pairs": 1
+      }
+    }
+  ]
+}

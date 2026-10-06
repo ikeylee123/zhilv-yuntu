@@ -4,6 +4,8 @@ from datetime import date as DateType, datetime
 from decimal import Decimal
 from typing import Any, Literal
 
+from app.models.planning_facts import PlanningFacts, RouteCoverage
+
 from pydantic import BaseModel, ConfigDict, Field, computed_field, model_serializer, model_validator
 
 
@@ -31,6 +33,7 @@ class TripConstraints(BaseModel):
     """
 
     model_config = ConfigDict(extra="forbid")
+    require_route_feasibility: bool | None = None
     budget_limit: Decimal | None = Field(default=None, ge=0, allow_inf_nan=False)
     must_visit: list[PlaceReference | str] | None = None
     avoid: list[PlaceReference | str] | None = None
@@ -66,6 +69,7 @@ class ValidationReport(BaseModel):
     violations: list[ConstraintViolation] = Field(default_factory=list)
     unknowns: list[ConstraintViolation] = Field(default_factory=list)
     checked_constraints: list[str] = Field(default_factory=list)
+    route_coverage: RouteCoverage = Field(default_factory=RouteCoverage)
 
     @model_validator(mode="after")
     def check_buckets(self) -> "ValidationReport":
@@ -274,6 +278,7 @@ class TokenUsage(BaseModel):
 class Itinerary(BaseModel):
     """完整行程。"""
 
+    planning_facts: PlanningFacts | None = None
     original_request: TripRequest | None = None
     constraints: TripConstraints | None = None
     validation_report: ValidationReport | None = None
@@ -350,5 +355,7 @@ class PlanningState(BaseModel):
     trip_request: TripRequest | None = None
     constraints: TripConstraints = Field(default_factory=TripConstraints)
     current_itinerary: Itinerary
+    planning_facts: PlanningFacts | None = None
+    evaluation_time: datetime | None = None
     validation_report: ValidationReport | None = None
     version: int = Field(default=1, ge=1)

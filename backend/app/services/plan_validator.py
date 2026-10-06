@@ -1,9 +1,12 @@
-"""Pure Phase 1 validation. No config, storage, network or model imports."""
+"""Pure planning validation. No config, storage, network or language-model imports."""
 from __future__ import annotations
 
-from datetime import time
+from datetime import time, datetime
 from decimal import Decimal
 import re
+
+from app.models.planning_facts import PlanningFacts
+from app.services.route_validation import check_routes
 
 from app.models.schemas import (
     ConstraintViolation, Itinerary, PlaceReference, PlanningState,
@@ -237,6 +240,15 @@ def validate_plan(state: PlanningState) -> ValidationReport:
                 finding("budget_exceeded", "Current estimated cost exceeds the limit; this is not real-price validation.",
                         expected=str(constraints.budget_limit), actual=str(estimate))
 
+    coverage, route_findings = check_routes(plan, constraints, state.planning_facts, state.evaluation_time)
+    for item in route_findings:
+        violation = ConstraintViolation(**item)
+        (unknowns if violation.severity == "unknown" else errors).append(violation)
+    if constraints.require_route_feasibility is True:
+        checked.append("route_feasibility")
+        if constraints.transport_preference is not None:
+            # The route check explicitly handles both supported and unsupported modes.
+            checked.append("transport_preference")
     required = list(dict.fromkeys(constraints.hard_constraints or []))
     if constraints.transport_preference is not None:
         required.append("transport_preference")
@@ -250,12 +262,11 @@ def validate_plan(state: PlanningState) -> ValidationReport:
         finding("unverifiable_hard_constraint", "Required constraint lacks supported rules, parameters or external facts.",
                 severity="unknown", expected=requirement, actual="not verified in Phase 1")
 
-    return ValidationReport(violations=errors, unknowns=unknowns, checked_constraints=checked)
+    return ValidationReport(violations=errors, unknowns=unknowns, checked_constraints=checked,
+                            route_coverage=coverage)
 
 
-def attach_validation(itinerary: Itinerary, request: TripRequest | None = None,
-                      *, increment_version: bool = False) -> Itinerary:
-    """Attach authoritative derived report; keep the original request across edits/saves."""
+def resolve_constraints(itinerary: Itinerary, request: TripRequest | None = None) -> TripConstraints:
     original = request if request is not None else itinerary.original_request
     constraints = (constraints_from_request(request) if request is not None else
                    itinerary.constraints if itinerary.constraints is not None else
@@ -265,12 +276,23 @@ def attach_validation(itinerary: Itinerary, request: TripRequest | None = None,
         values = constraints_from_request(original).model_dump()
         values.update(itinerary.constraints.model_dump())
         constraints = TripConstraints.model_validate(values)
+    return constraints
+
+
+def attach_validation(itinerary: Itinerary, request: TripRequest | None = None,
+                      *, increment_version: bool = False, facts: PlanningFacts | None = None,
+                      evaluation_time: datetime | None = None) -> Itinerary:
+    """Attach derived metadata without I/O; use explicit facts, never itinerary snapshots."""
+    original = request if request is not None else itinerary.original_request
+    constraints = resolve_constraints(itinerary, request)
     version = (itinerary.planning_version or 1) + int(increment_version)
     state = PlanningState(trip_request=original, constraints=constraints,
-                          current_itinerary=itinerary, version=version)
+                          current_itinerary=itinerary, version=version, planning_facts=facts,
+                          evaluation_time=evaluation_time)
     state.validation_report = validate_plan(state)
     itinerary.original_request = original.model_copy(deep=True) if original else None
     itinerary.constraints = constraints.model_copy(deep=True)
+    itinerary.planning_facts = facts
     itinerary.validation_report = state.validation_report
     itinerary.planning_version = version
     return itinerary
