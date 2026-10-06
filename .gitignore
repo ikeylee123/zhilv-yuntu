@@ -4,6 +4,7 @@ docs/*
 !docs/phase1-constraint-validation.md
 !docs/phase2-route-feasibility.md
 !docs/phase2_5-mcp-tool-infrastructure.md
+!docs/phase3a-authoritative-state.md
 
 # Environment files
 .env

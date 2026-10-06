@@ -1,4 +1,33 @@
 from fastapi import APIRouter, HTTPException
+from app.models.replanning import AuthoritativePlanState, StateError
+from app.services.authoritative_state import (
+    create_authoritative_draft, load_authoritative_plan, archive_authoritative_plan,
+    is_managed_plan,
+)
+
+
+def _state_call(function, *args):
+    try:
+        return function(*args)
+    except StateError as exc:
+        raise HTTPException(status_code=404 if exc.code == "STATE_NOT_FOUND" else 409,
+                            detail={"code": exc.code}) from exc
+
+
+def _legacy_copy(plan):
+    """Legacy HTTP data is display input, never trusted baseline/evidence metadata."""
+    plan = plan.model_copy(deep=True)
+    plan.original_request = None
+    plan.constraints = None
+    plan.planning_facts = None
+    plan.validation_report = None
+    plan.planning_version = None
+    plan.state_schema_version = None
+    for day in plan.days:
+        for spot in day.spots:
+            spot.activity_id = None
+    return plan
+
 
 from app.models.schemas import (
     Itinerary,
@@ -44,7 +73,7 @@ def list_trips() -> TripListResponse:
 
 
 @router.post("/generate", response_model=Itinerary)
-def generate_trip(request: TripRequest) -> Itinerary:
+def generate_trip(request: TripRequest, managed_state: bool = False) -> Itinerary:
     """生成结构化 itinerary。"""
     try:
         ensure_date_range(request)
@@ -163,14 +192,14 @@ def generate_trip(request: TripRequest) -> Itinerary:
         )
         itinerary = Itinerary.model_validate(itinerary)
         itinerary.original_request = request.model_copy(deep=True)
-        return itinerary
+        return create_authoritative_draft(itinerary).itinerary if managed_state else itinerary
 
     normalized_request = request.model_copy(
         update={"destination": city_resolution.city},
     )
     itinerary = Itinerary.model_validate(generate_trip_itinerary(normalized_request))
     itinerary.original_request = request.model_copy(deep=True)
-    return itinerary
+    return create_authoritative_draft(itinerary).itinerary if managed_state else itinerary
 
 
 @router.get("/stats", response_model=TokenStatsResponse)
@@ -182,23 +211,41 @@ def get_trip_token_stats() -> TokenStatsResponse:
 @router.post("/edit", response_model=Itinerary)
 def edit_trip(request: TripEditRequest) -> Itinerary:
     """根据用户编辑指令返回更新后的 itinerary。"""
-    return edit_trip_itinerary(request)
+    if request.trip_id != request.current_itinerary.trip_id:
+        raise HTTPException(status_code=409, detail={"code": "STATE_ID_MISMATCH"})
+    if is_managed_plan(request.trip_id) or request.current_itinerary.state_schema_version is not None:
+        raise HTTPException(status_code=409, detail={"code": "LEGACY_WRITE_FORBIDDEN"})
+    clean_request = request.model_copy(update={"current_itinerary": _legacy_copy(request.current_itinerary)})
+    return edit_trip_itinerary(clean_request)
 
 
 @router.post("/save")
 def save_trip(request: TripSaveRequest) -> dict[str, str]:
     """保存 itinerary，并返回 trip_id。"""
-    saved_trip_id = save_itinerary(request.itinerary)
+    if request.trip_id != request.itinerary.trip_id:
+        raise HTTPException(status_code=409, detail={"code": "STATE_ID_MISMATCH"})
+    if is_managed_plan(request.trip_id):
+        # Only archive metadata changes; the supplied JSON is never used as plan state.
+        saved_trip_id = _state_call(archive_authoritative_plan, request.trip_id)
+    elif request.itinerary.state_schema_version is not None:
+        raise HTTPException(status_code=409, detail={"code": "MANAGED_STATE_REQUIRED"})
+    else:
+        saved_trip_id = _state_call(save_itinerary, _legacy_copy(request.itinerary))
     return {
         "message": "Trip itinerary saved successfully.",
         "trip_id": saved_trip_id,
     }
 
 
+@router.get("/{trip_id}/state", response_model=AuthoritativePlanState)
+def get_authoritative_state(trip_id: str):
+    return _state_call(load_authoritative_plan, trip_id)
+
+
 @router.get("/{trip_id}", response_model=TripDetailResponse)
 def get_trip_detail(trip_id: str) -> TripDetailResponse:
     """根据 trip_id 查询已保存 itinerary。"""
-    trip_detail = get_itinerary_by_trip_id(trip_id)
+    trip_detail = _state_call(get_itinerary_by_trip_id, trip_id)
     if trip_detail is None:
         raise HTTPException(status_code=404, detail="Trip not found.")
     return trip_detail

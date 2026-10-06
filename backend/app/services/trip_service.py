@@ -775,6 +775,12 @@ def generate_trip_itinerary(request: TripRequest) -> Itinerary:
 
 def edit_trip_itinerary(request: TripEditRequest) -> Itinerary:
     """优先使用 LLM 编辑单日行程，失败时回退到规则编辑。"""
+    from app.models.replanning import StateError
+    from app.services.authoritative_state import is_managed_plan
+    if (request.trip_id != request.current_itinerary.trip_id
+            or request.current_itinerary.state_schema_version is not None
+            or is_managed_plan(request.trip_id)):
+        raise StateError("LEGACY_WRITE_FORBIDDEN")
     updated_itinerary = request.current_itinerary.model_copy(deep=True)
 
     target_day = updated_itinerary.days[0] if updated_itinerary.days else None

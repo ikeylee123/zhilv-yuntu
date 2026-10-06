@@ -19,7 +19,7 @@ const api = axios.create({
 });
 
 export async function generateTrip(payload: TripRequestPayload): Promise<Itinerary> {
-  const response = await api.post<Itinerary>("/trip/generate", payload);
+  const response = await api.post<Itinerary>("/trip/generate?managed_state=true", payload);
   return response.data;
 }
 

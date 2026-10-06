@@ -163,6 +163,10 @@ async function handleSave() {
 
 async function handleEdit() {
   if (!props.itinerary) return;
+  if (props.itinerary.state_schema_version) {
+    message.info("???????????????????????");
+    return;
+  }
   const instruction = editInstruction.value.trim();
   if (!instruction) { message.warning("请先输入想如何调整行程。"); return; }
   editing.value = true;

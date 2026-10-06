@@ -20,6 +20,7 @@ export interface TripEditPayload {
 }
 
 export interface SpotItem {
+  activity_id?: string | null;
   name: string;
   start_time?: string | null;
   end_time?: string | null;
@@ -88,6 +89,8 @@ export interface BudgetBreakdown {
 }
 
 export interface Itinerary {
+  planning_version?: number | null;
+  state_schema_version?: number | null;
   trip_id: string;
   destination: string;
   summary: string;

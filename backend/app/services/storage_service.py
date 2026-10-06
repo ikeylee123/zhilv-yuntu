@@ -1,4 +1,6 @@
 import json
+from sqlalchemy import inspect, update
+from app.models.replanning import StateError
 
 from app.services.planning_fact_service import attach_server_validation
 from app.config import SessionLocal, engine
@@ -18,11 +20,24 @@ def init_db() -> None:
     """初始化数据库表结构。"""
     from app.config import Base
 
-    Base.metadata.create_all(bind=engine)
+    # SQLite serializes schema upgrades across processes, including first startup.
+    with engine.begin() as connection:
+        connection.exec_driver_sql("BEGIN IMMEDIATE")
+        Base.metadata.create_all(bind=connection)
+        columns = {column["name"] for column in inspect(connection).get_columns("trip_records")}
+        additions = {"planning_version": "INTEGER", "state_schema_version": "INTEGER",
+                     "baseline_trusted": "BOOLEAN NOT NULL DEFAULT 0",
+                     "archived": "BOOLEAN NOT NULL DEFAULT 1"}
+        for name, definition in additions.items():
+            if name not in columns:
+                connection.exec_driver_sql(f"ALTER TABLE trip_records ADD COLUMN {name} {definition}")
 
 
 def save_itinerary(itinerary: Itinerary) -> str:
     """保存或更新完整 itinerary，并返回 trip_id。"""
+    from app.services.authoritative_state import is_managed_plan
+    if is_managed_plan(itinerary.trip_id) or itinerary.state_schema_version is not None:
+        raise StateError("LEGACY_WRITE_FORBIDDEN")
     itinerary = attach_server_validation(itinerary.model_copy(deep=True))
     init_db()
 
@@ -48,9 +63,16 @@ def save_itinerary(itinerary: Itinerary) -> str:
             )
             session.add(record)
         else:
-            existing_record.destination = itinerary.destination
-            existing_record.summary = itinerary.summary
-            existing_record.itinerary_json = itinerary_json
+            if existing_record.state_schema_version is not None or existing_record.planning_version is not None:
+                raise StateError("LEGACY_WRITE_FORBIDDEN")
+            result = session.execute(update(TripRecord).where(
+                TripRecord.id == existing_record.id,
+                TripRecord.state_schema_version.is_(None), TripRecord.planning_version.is_(None),
+                TripRecord.itinerary_json == existing_record.itinerary_json,
+            ).values(destination=itinerary.destination, summary=itinerary.summary,
+                     itinerary_json=itinerary_json), execution_options={"synchronize_session": False})
+            if result.rowcount != 1:
+                raise StateError("LEGACY_WRITE_FORBIDDEN")
 
         session.commit()
         return itinerary.trip_id
@@ -68,8 +90,11 @@ def get_itinerary_by_trip_id(trip_id: str) -> TripDetailResponse | None:
         if record is None:
             return None
 
-        itinerary_data = json.loads(record.itinerary_json)
-        itinerary = Itinerary(**itinerary_data)
+        if record.state_schema_version is not None or record.planning_version is not None:
+            from app.services.authoritative_state import _decode
+            itinerary = _decode(record).itinerary
+        else:
+            itinerary = Itinerary.model_validate_json(record.itinerary_json)
 
         return TripDetailResponse(
             trip_id=record.trip_id,
@@ -89,6 +114,7 @@ def list_saved_itineraries() -> TripListResponse:
     try:
         records = (
             session.query(TripRecord)
+            .filter(TripRecord.archived.is_(True))
             .order_by(TripRecord.updated_at.desc(), TripRecord.id.desc())
             .all()
         )
@@ -116,6 +142,7 @@ def get_token_stats() -> TokenStatsResponse:
     try:
         records = (
             session.query(TripRecord)
+            .filter(TripRecord.archived.is_(True))
             .order_by(TripRecord.updated_at.desc(), TripRecord.id.desc())
             .all()
         )

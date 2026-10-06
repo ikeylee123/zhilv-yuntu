@@ -154,6 +154,9 @@ class TripSaveRequest(BaseModel):
 
 
 class SpotItem(BaseModel):
+    # Legacy parsing is permissive; authoritative materialization enforces identity.
+    activity_id: str | None = None
+
     """单个景点安排。"""
 
     name: str = Field(..., description="景点名称")
@@ -283,6 +286,7 @@ class Itinerary(BaseModel):
     constraints: TripConstraints | None = None
     validation_report: ValidationReport | None = None
     planning_version: int | None = Field(default=None, ge=1)
+    state_schema_version: int | None = Field(default=None, ge=1)
 
     trip_id: str = Field(..., description="行程唯一标识")
     destination: str = Field(..., description="目的地")
