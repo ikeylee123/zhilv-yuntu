@@ -5,6 +5,7 @@ docs/*
 !docs/phase2-route-feasibility.md
 !docs/phase2_5-mcp-tool-infrastructure.md
 !docs/phase3a-authoritative-state.md
+!docs/phase3b-deterministic-replanning.md
 
 # Environment files
 .env

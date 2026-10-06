@@ -261,3 +261,29 @@ def delete_trip(trip_id: str) -> dict[str, str]:
         "message": "Trip itinerary deleted successfully.",
         "trip_id": trip_id,
     }
+
+
+# Structured Phase 3B endpoints; managed legacy /edit remains closed.
+from fastapi import Depends
+from app.models.replanning import PlanChangeRequest, CandidatePreparationRequest, ReplanDecision, AllowedCandidateSet
+from app.services.replanning_service import ReplanningService
+
+
+def get_replanning_service():
+    return ReplanningService()
+
+
+@router.post("/{trip_id}/replan/candidates", response_model=AllowedCandidateSet)
+def prepare_replan_candidates(trip_id: str, request: CandidatePreparationRequest,
+                              service: ReplanningService = Depends(get_replanning_service)):
+    if trip_id != request.trip_id:
+        raise HTTPException(status_code=422, detail={"code": "INVALID_CHANGE_REQUEST"})
+    return _state_call(service.prepare, request)
+
+
+@router.post("/{trip_id}/replan", response_model=ReplanDecision)
+def replan_trip(trip_id: str, request: PlanChangeRequest,
+                service: ReplanningService = Depends(get_replanning_service)):
+    if trip_id != request.trip_id:
+        raise HTTPException(status_code=422, detail={"code": "INVALID_CHANGE_REQUEST"})
+    return service.replan(request)
